@@ -1,5 +1,6 @@
 {
-    "2023": {"Delhi":27,"Mumbai":14,"Rajasthan":23,"Bengal":16,"Gujarat":19, "UP State":17, "MP State":13, "Jharkhand":10, "North Bihar":10, "South Bihar":10, "Chhattisgarh":10},
-    "2024": {"Delhi":48,"Mumbai":44,"Rajasthan":45,"Bengal":40,"Gujarat":38, "UP State":40, "MP State":35, "Jharkhand":33, "North Bihar":29, "South Bihar":18, "Chhattisgarh":20},
-    "2025": {"Delhi":49,"Mumbai":39,"Rajasthan":43,"Bengal":38,"Gujarat":37, "UP State":36, "MP State":33, "Jharkhand":27, "North Bihar":29, "South Bihar":19, "Chhattisgarh":24}
+    "2023": {"Delhi":27,"Northwest":21,"Uttarakhand":10,"Jammu":10, "Telangana":21,"Andhra":25,"Karnataka":24,"Kerala":10,"TN State":17, "Odisha":10, "Maharashtra":20,"Mumbai":14,"Rajasthan":23,"Bengal":16,"Gujarat":19, "UP State":17, "MP State":13, "Jharkhand":10, "North Bihar":10, "South Bihar":10, "Chhattisgarh":10},
+    "2024": {"Delhi":48,"Northwest":45,"Uttarakhand":19,"Jammu":10, "Telangana":46,"Andhra":30,"Karnataka":48,"Kerala":31,"TN State":40, "Odisha":33,"Maharashtra":45,"Mumbai":44, "Rajasthan":45,"Bengal":40,"Gujarat":38, "UP State":40, "MP State":35, "Jharkhand":33, "North Bihar":29, "South Bihar":18, "Chhattisgarh":20},
+    "2025": {"Delhi":49,"Telangana":46,"Andhra":39,"Karnataka":42,"Kerala":32,"TN State":43, "Odisha":30, "Maharashtra":43, "Mumbai":39,"Rajasthan":43,"Bengal":38,"Gujarat":37, "UP State":36, "MP State":33, "Jharkhand":27, "North Bihar":29, "South Bihar":19, "Chhattisgarh":24},
+    "2025-II": {"Northwest":47,"Jammu":14,"Uttarakhand":15},
 }
