@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>State Rankings by Top 10% Score</title>
+<title>State Rankings by Top 40 (Class 12)</title>
 <style>
 body { font-family: Arial; background:#111; color:#fff; text-align:center; margin:50px; }
 select { margin:10px; padding:5px; font-size:16px; }
@@ -15,7 +15,7 @@ th { background:#0ff; color:#000; }
 </style>
 </head>
 <body>
-<h1>🏆 State Rankings by Top 10% Score</h1>
+<h1>🏆 State Rankings by Top 40 (Class 12)</h1>
 
 <label>Select Year:</label>
 <select id="yearSelect">
@@ -34,7 +34,7 @@ let dataJSON = {};
 
 // Load JSON dynamically
 async function loadData() {
-    const res = await fetch('ten-percent.json?ts=' + new Date().getTime());
+    const res = await fetch('top40-class-12.json?ts=' + new Date().getTime());
     dataJSON = await res.json();
     populateDropdown();
 }
