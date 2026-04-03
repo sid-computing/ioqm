@@ -16,21 +16,20 @@ html, body {
 #particles-js { position:absolute; width:100%; height:100%; z-index:0; }
 
 #content {
-    position:relative; z-index:1; padding:50px 20px; max-width:1000px; margin:auto;
+    position:relative; z-index:1; padding:50px 20px; max-width:800px; margin:auto;
 }
 
 h1 { color:#0ff; text-shadow:0 0 20px #0ff; text-align:center; margin-bottom:20px; }
 
-.question {
+.question, #selection {
     background: rgba(0,0,0,0.5);
     border-radius:15px; padding:20px; margin-bottom:30px;
     box-shadow: 0 0 20px #0ff;
-    user-select:none; /* prevent copy-paste */
+    user-select:none;
 }
 
-.question h2 { color:#ff0; margin-bottom:10px; }
+.question h2, #selection h2 { color:#ff0; margin-bottom:10px; }
 .question p { line-height:1.6; }
-.question canvas, .figure-container { margin:10px 0; text-align:center; }
 
 input.answer-input {
     width:80px; padding:5px; font-size:18px; border-radius:8px;
@@ -39,7 +38,7 @@ input.answer-input {
 }
 
 button {
-    margin-left:10px; padding:6px 12px; font-size:16px;
+    margin:5px 5px 0 0; padding:6px 12px; font-size:16px;
     border-radius:8px; border:none; cursor:pointer;
     background:#0ff; color:#000;
     transition: all 0.3s ease;
@@ -49,6 +48,8 @@ button:hover { box-shadow:0 0 20px #0ff; transform: scale(1.05); }
 
 .solution { display:none; background:rgba(255,255,255,0.05); margin-top:15px; padding:15px; border-radius:10px; }
 
+label { margin-right:10px; }
+select { padding:5px 10px; border-radius:8px; border:2px solid #0ff; background:#111; color:#0ff; margin-right:15px; }
 </style>
 </head>
 <body>
@@ -58,30 +59,33 @@ button:hover { box-shadow:0 0 20px #0ff; transform: scale(1.05); }
 <div id="content">
     <h1>IOQM Past Papers</h1>
 
-    <!-- Example Question Template -->
-    <div class="question" data-question-id="1">
-        <h2>Question 1</h2>
-        <p>
-            A number is chosen randomly from 0 to 99. What is the remainder when it is divided by 7?
-        </p>
-        <!-- Optional figure -->
-        <div class="figure-container">
-            <!-- You can insert a canvas or image here -->
-            <canvas id="fig1" width="200" height="200"></canvas>
-        </div>
+    <!-- Selection UI -->
+    <div id="selection">
+        <h2>Select Year & Difficulty</h2>
+        <label for="year-select">Year:</label>
+        <select id="year-select">
+            <option value="">--Select Year--</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+        </select>
 
-        <!-- Answer input -->
-        <label>Answer: </label>
-        <input type="number" class="answer-input" min="0" max="99">
-        <button onclick="checkAnswer(this)">Check Answer</button>
-        <button onclick="toggleSolution(this)">Show Solution</button>
+        <label for="difficulty-select">Difficulty:</label>
+        <select id="difficulty-select">
+            <option value="">--Select Difficulty--</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
 
-        <div class="solution">
-            <p>Solution: Any number modulo 7 gives remainder between 0-6. So the remainder depends on the number chosen. For example, 10 mod 7 = 3.</p>
-        </div>
+        <button onclick="startPaper()">Start Paper</button>
     </div>
-
-    <!-- Add more questions here -->
 </div>
 
 <script>
@@ -103,45 +107,110 @@ tsParticles.load("particles-js", {
     background: { color:"#0a0a0a" }
 });
 
+// ---------- Past Papers Data ----------
+const pastPapers = {
+    "2023": {
+        "easy": [
+            { q: "A number is chosen randomly from 0 to 99. What is the remainder when it is divided by 7?", a: 3 },
+            { q: "Find 5 + 7.", a: 12 }
+        ],
+        "medium": [
+            { q: "If x + 2 = 5, find x.", a: 3 }
+        ],
+        "hard": [
+            { q: "Find remainder when 12345 is divided by 9.", a: 6 }
+        ]
+    },
+    "2024": {
+        "easy": [
+            { q: "What is 2^3?", a: 8 }
+        ],
+        "medium": [],
+        "hard": []
+    }
+    // Add more years/difficulties/questions here
+};
+
+// ---------- Global Variables ----------
+let currentPaper = [];
+let currentQuestionIndex = 0;
+
+// ---------- Start Paper ----------
+function startPaper() {
+    const year = document.getElementById('year-select').value;
+    const difficulty = document.getElementById('difficulty-select').value;
+
+    if(!year || !difficulty) { alert("Please select both year and difficulty!"); return; }
+
+    if(!pastPapers[year] || !pastPapers[year][difficulty].length) {
+        alert("No questions available for this year/difficulty.");
+        return;
+    }
+
+    currentPaper = pastPapers[year][difficulty];
+    currentQuestionIndex = 0;
+
+    document.getElementById('selection').style.display = "none";
+    renderQuestion();
+}
+
+// ---------- Render Question ----------
+function renderQuestion() {
+    const container = document.getElementById('content');
+    const qObj = currentPaper[currentQuestionIndex];
+
+    container.innerHTML = `
+        <div class="question">
+            <h2>Question ${currentQuestionIndex + 1}</h2>
+            <p>${qObj.q}</p>
+
+            <label>Answer: </label>
+            <input type="number" class="answer-input" min="0" max="99">
+            <button onclick="checkAnswer()">Check Answer</button>
+            <button onclick="toggleSolution()">Show Solution</button>
+
+            <div class="solution" style="display:none;">
+                <p>Solution: ${qObj.a}</p>
+            </div>
+            <br>
+            <button onclick="nextQuestion()">Next &rarr;</button>
+        </div>
+    `;
+
+    MathJax.typesetPromise(); // render any LaTeX
+}
+
 // ---------- Answer Checking ----------
-function checkAnswer(button) {
-    const questionDiv = button.closest('.question');
-    const input = questionDiv.querySelector('.answer-input');
+function checkAnswer() {
+    const input = document.querySelector('.answer-input');
     const val = parseInt(input.value);
-    if(isNaN(val) || val<0 || val>=100) {
+    const correctAnswer = currentPaper[currentQuestionIndex].a;
+
+    if(isNaN(val) || val < 0 || val >= 100) {
         alert("Enter a valid non-negative integer less than 100.");
         return;
     }
 
-    // You can set correct answer here dynamically for each question
-    const correctAnswers = { "1": 3 }; // Example for question 1
-    const qid = questionDiv.dataset.questionId;
-    if(correctAnswers[qid] === val) {
-        alert("✅ Correct!");
-    } else {
-        alert("❌ Incorrect.");
-    }
+    if(val === correctAnswer) alert("✅ Correct!");
+    else alert("❌ Incorrect. Try again.");
 }
 
 // ---------- Toggle Solution ----------
-function toggleSolution(button) {
-    const questionDiv = button.closest('.question');
-    const solDiv = questionDiv.querySelector('.solution');
-    if(solDiv.style.display === "none") solDiv.style.display = "block";
-    else solDiv.style.display = "none";
+function toggleSolution() {
+    const solDiv = document.querySelector('.solution');
+    solDiv.style.display = solDiv.style.display === "none" ? "block" : "none";
 }
 
-// ---------- Example: Drawing on Canvas ----------
-const canvas = document.getElementById('fig1');
-const ctx = canvas.getContext('2d');
-ctx.strokeStyle = "#0ff";
-ctx.lineWidth = 2;
-ctx.beginPath();
-ctx.arc(100,100,50,0,2*Math.PI);
-ctx.stroke();
-
-// ---------- MathJax Rendering ----------
-MathJax.typesetPromise(); // To render any LaTeX you insert in <p> or <div>
+// ---------- Next Question ----------
+function nextQuestion() {
+    if(currentQuestionIndex < currentPaper.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion();
+    } else {
+        alert("🎉 You have completed this paper!");
+        location.reload(); // go back to selection
+    }
+}
 </script>
 
 </body>
