@@ -62,27 +62,10 @@ button:hover { box-shadow:0 0 20px #0ff; transform: scale(1.05); }
 
 <div id="content">
     <h1>IOQM 2025 Easy</h1>
-
-    <!-- Questions will be inserted here -->
     <div id="questions-container"></div>
 </div>
 
 <script>
-// ---------- Particle Background ----------
-tsParticles.load("particles-js", {
-    particles: {
-        number: { value: 80 },
-        color: { value: ["#0ff","#ff0","#f0f"] },
-        shape: { type: "circle" },
-        opacity: { value: 0.5, random:true },
-        size: { value: 3, random:true },
-        move: { enable:true, speed:2, direction:"none", outMode:"bounce" },
-        links: { enable:true, distance:150, color:"#0ff", opacity:0.2, width:1 }
-    },
-    interactivity: { events:{ onHover:{ enable:true, mode:"repulse" } }, modes:{ repulse:{ distance:100 } } },
-    background: { color:"#0a0a0a" }
-});
-
 // ---------- Questions Data ----------
 const questions = [
     { q:"Find the number of positive integers n ≤ 100, divisible by 3 but not by 2.", a:17 },
@@ -97,20 +80,39 @@ const questions = [
     { q:"The height and base radius of a closed right circular cylinder are positive integers and its total surface area equals its volume. If its volume is kπ, what is the smallest possible value of k?", a:54 },
 ];
 
-// ---------- Render Questions ----------
-const container = document.getElementById('questions-container');
-questions.forEach((qObj, index) => {
-    const div = document.createElement('div');
-    div.className = 'question';
-    div.innerHTML = `
-        <p><strong>Q${index+1}:</strong> ${qObj.q}</p>
-        <input type="number" class="answer-input" min="0" max="1000">
-        <button onclick="checkAnswer(this, ${qObj.a})">Check Answer</button>
-        <button onclick="toggleSolution(this)">Show Solution</button>
-        <div class="solution">Solution: ${qObj.a}</div>
-    `;
-    container.appendChild(div);
-});
+// ---------- Run after page load ----------
+window.onload = function() {
+
+    // ---------- Particle Background ----------
+    tsParticles.load("particles-js", {
+        particles: {
+            number: { value: 80 },
+            color: { value: ["#0ff","#ff0","#f0f"] },
+            shape: { type: "circle" },
+            opacity: { value: 0.5, random:true },
+            size: { value: 3, random:true },
+            move: { enable:true, speed:2, direction:"none", outMode:"bounce" },
+            links: { enable:true, distance:150, color:"#0ff", opacity:0.2, width:1 }
+        },
+        interactivity: { events:{ onHover:{ enable:true, mode:"repulse" } }, modes:{ repulse:{ distance:100 } } },
+        background: { color:"#0a0a0a" }
+    });
+
+    // ---------- Render Questions ----------
+    const container = document.getElementById('questions-container');
+    questions.forEach((qObj, index) => {
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `
+            <p><strong>Q${index+1}:</strong> ${qObj.q}</p>
+            <input type="number" class="answer-input" min="0" max="1000">
+            <button onclick="checkAnswer(this, ${qObj.a})">Check Answer</button>
+            <button onclick="toggleSolution(this)">Show Solution</button>
+            <div class="solution">Solution: ${qObj.a}</div>
+        `;
+        container.appendChild(div);
+    });
+};
 
 // ---------- Check Answer ----------
 function checkAnswer(btn, correct) {
