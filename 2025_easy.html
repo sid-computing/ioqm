@@ -26,7 +26,7 @@ html, body {
 #content {
     position:relative;
     z-index:1;
-    max-width:800px;
+    max-width:900px;
     margin:50px auto;
     padding:20px;
     background: rgba(0,0,0,0.5);
@@ -36,7 +36,8 @@ html, body {
 
 h1 { text-align:center; color:#0ff; text-shadow:0 0 20px #0ff; margin-bottom:30px; }
 
-.question p { font-size:18px; margin-bottom:15px; }
+.question { margin-bottom:25px; padding:15px; background: rgba(0,0,0,0.3); border-radius:10px; }
+.question p { font-size:18px; margin-bottom:10px; }
 
 input.answer-input {
     width:80px; padding:5px; font-size:16px; border-radius:8px;
@@ -61,11 +62,9 @@ button:hover { box-shadow:0 0 20px #0ff; transform: scale(1.05); }
 
 <div id="content">
     <h1>IOQM 2025 Easy</h1>
-    <div id="question-container"></div>
-    <div style="text-align:center; margin-top:20px;">
-        <button id="prev-btn">← Previous</button>
-        <button id="next-btn">Next →</button>
-    </div>
+
+    <!-- Questions will be inserted here -->
+    <div id="questions-container"></div>
 </div>
 
 <script>
@@ -86,40 +85,38 @@ tsParticles.load("particles-js", {
 
 // ---------- Questions Data ----------
 const questions = [
-    { q:"Find the number of positive integers n less than or equal to 100, which are divisible by 3 but not by 2.", a:17 },
+    { q:"Find the number of positive integers n ≤ 100, divisible by 3 but not by 2.", a:17 },
     { q:"If 60% of a number x is 40, then what is x% of 60?", a:40 },
-    { q:"The area of an integer­sided rectangle is 20. What is the minimum possible value of its perimeter?", a:18 },
-    { q:"How many isosceles integer­sided triangles are there with perimeter 23?", a:6 },
-    { q:"How many 3­ digit numbers abc in base 10 are there with a ≠ 0 and c = a + b?", a:45 },
-    { q:"The age of a person (in years) in 2025 is a perfect square. His age (in years) was also a perfect square in 2012. His age (in years) will be a perfect cube m years after 2025. Determine the smallest value of m.", a:15 },
+    { q:"The area of an integer-sided rectangle is 20. What is the minimum possible value of its perimeter?", a:18 },
+    { q:"How many isosceles integer-sided triangles are there with perimeter 23?", a:6 },
+    { q:"How many 3-digit numbers abc in base 10 are there with a ≠ 0 and c = a + b?", a:45 },
+    { q:"The age of a person in 2025 is a perfect square. His age was also a perfect square in 2012. His age will be a perfect cube m years after 2025. Determine the smallest value of m.", a:15 },
     { q:"The sum of two real numbers is a positive integer n and the sum of their squares is n + 1012. Find the maximum possible value of n.", a:46 },
-    { q:"A quadrilateral has four vertices A, B, C, D. We want to colour each vertex in one of the four colours red, blue, green or yellow, so that every side of the quadrilateral and the diagonal AC have end points of different colours. In how many ways can we do this?", a:48 },
-    { q:"Four sides and a diagonal of a quadrilateral are of lengths 10, 20, 28, 50, 75, not necessarily in that order. Which amongst them is the only possible length of the diagonal?", a:28 },
-    { q:"The height and the base radius of a closed right circular cylinder are positive integers and its total surface area is numerically equal to its volume. If its volume is kπ where k is a positive integer, what is the smallest possible value of k?", a:54 },
+    { q:"A quadrilateral has four vertices A, B, C, D. Colour each vertex in one of four colours so that every side of the quadrilateral and diagonal AC have endpoints of different colours. In how many ways?", a:48 },
+    { q:"Four sides and a diagonal of a quadrilateral are of lengths 10, 20, 28, 50, 75, not necessarily in order. Which is the only possible length of the diagonal?", a:28 },
+    { q:"The height and base radius of a closed right circular cylinder are positive integers and its total surface area equals its volume. If its volume is kπ, what is the smallest possible value of k?", a:54 },
 ];
 
-let currentIndex = 0;
-
-// ---------- Render Current Question ----------
-function renderQuestion() {
-    const container = document.getElementById('question-container');
-    const qObj = questions[currentIndex];
-    container.innerHTML = `
-        <div class="question">
-            <p><strong>Q${currentIndex+1} of ${questions.length}:</strong> ${qObj.q}</p>
-            <input type="number" class="answer-input" min="0" max="99">
-            <button onclick="checkAnswer(${qObj.a})">Check Answer</button>
-            <button onclick="toggleSolution(this)">Show Solution</button>
-            <div class="solution">Solution: ${qObj.a}</div>
-        </div>
+// ---------- Render Questions ----------
+const container = document.getElementById('questions-container');
+questions.forEach((qObj, index) => {
+    const div = document.createElement('div');
+    div.className = 'question';
+    div.innerHTML = `
+        <p><strong>Q${index+1}:</strong> ${qObj.q}</p>
+        <input type="number" class="answer-input" min="0" max="1000">
+        <button onclick="checkAnswer(this, ${qObj.a})">Check Answer</button>
+        <button onclick="toggleSolution(this)">Show Solution</button>
+        <div class="solution">Solution: ${qObj.a}</div>
     `;
-}
+    container.appendChild(div);
+});
 
-// ---------- Answer Checking ----------
-function checkAnswer(correct) {
-    const input = document.querySelector('.answer-input');
+// ---------- Check Answer ----------
+function checkAnswer(btn, correct) {
+    const input = btn.previousElementSibling;
     const val = parseInt(input.value);
-    if(isNaN(val) || val<0 || val>=100) { alert("Enter 0-99"); return; }
+    if(isNaN(val)) { alert("Enter a number!"); return; }
     if(val === correct) alert("✅ Correct!"); else alert("❌ Incorrect!");
 }
 
@@ -128,18 +125,6 @@ function toggleSolution(btn) {
     const sol = btn.nextElementSibling;
     sol.style.display = sol.style.display === "none" ? "block" : "none";
 }
-
-// ---------- Navigation ----------
-document.getElementById('prev-btn').addEventListener('click', () => {
-    if(currentIndex > 0) { currentIndex--; renderQuestion(); }
-});
-document.getElementById('next-btn').addEventListener('click', () => {
-    if(currentIndex < questions.length-1) { currentIndex++; renderQuestion(); }
-    else alert("🎉 You have completed the easy questions of IOQM 2025!");
-});
-
-// ---------- Initial Render ----------
-renderQuestion();
 </script>
 
 </body>
