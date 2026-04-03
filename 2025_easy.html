@@ -3,87 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2025 Easy Questions</title>
-<style>
-body { font-family: Arial; background:#0a0a0a; color:#fff; padding:50px; }
-.question { background: rgba(0,0,0,0.5); padding:20px; margin-bottom:20px; border-radius:10px; }
-input { padding:5px; width:60px; margin-right:10px; }
-button { padding:5px 10px; margin-right:10px; }
-.solution { display:none; background:rgba(255,255,255,0.1); padding:10px; margin-top:10px; border-radius:5px; }
-</style>
-</head>
-<body>
-<h1>2025 Easy Questions</h1>
-
-<div class="question">
-    <p><strong>Q1:</strong> Find the number of positive integers n less than or equal to 100, which are divisible by 3 but are not divisible by
-2.</p>
-    <input type="number" class="answer-input" min="0" max="99">
-    <button onclick="checkAnswer(17)">Check Answer</button>
-    <button onclick="toggleSolution(this)">Show Solution</button>
-    <div class="solution">Solution: 33 numbers between 1 and 100 are divisible by 3. 16 numbers between 1 and 100 are divisible by 6. So 17 numbers are divisible by 3 but not by 6, i.e., not divisible by 2.</div>
-</div>
-
-<div class="question">
-    <p><strong>Q2:</strong> If 60% of a number x is 40, then what is x% of 60?</p>
-    <input type="number" class="answer-input" min="0" max="99">
-    <button onclick="checkAnswer(40)">Check Answer</button>
-    <button onclick="toggleSolution(this)">Show Solution</button>
-    <div class="solution">Solution: a% of b is same as b% of a.</div>
-</div>
-<div class="question">
-    <p><strong>Q3:</strong> The area of an integer­sided rectangle is 20. What is the minimum possible value of its perimeter?</p>
-    <input type="number" class="answer-input" min="0" max="99">
-    <button onclick="checkAnswer(18)">Check Answer</button>
-    <button onclick="toggleSolution(this)">Show Solution</button>
-    <div class="solution">Solution: Yet to be added.</div>
-</div>
-<div class="question">
-    <p><strong>Q4:</strong> How many isosceles integer­sided triangles are there with perimeter 23?</p>
-    <input type="number" class="answer-input" min="0" max="99">
-    <button onclick="checkAnswer(6)">Check Answer</button>
-    <button onclick="toggleSolution(this)">Show Solution</button>
-    <div class="solution">Solution: Yet to be added.</div>
-</div>
-<div class="question">
-    <p><strong>Q6:</strong> The age of a person (in years) in 2025 is a perfect square. His age (in years) was also a perfect square in 2012.
-His age (in years) will be a perfect cube m years after 2025. Determine the smallest value of m.</p>
-    <input type="number" class="answer-input" min="0" max="99">
-    <button onclick="checkAnswer(15)">Check Answer</button>
-    <button onclick="toggleSolution(this)">Show Solution</button>
-    <div class="solution">Solution: Yet to be added.</div>
-</div>
-<div class="question">
-    <p><strong>Q7:</strong> The sum of two real numbers is a positive integer n and the sum of their squares is n + 1012. Find the maximum
-possible value of n.</p>
-    <input type="number" class="answer-input" min="0" max="99">
-    <button onclick="checkAnswer(46)">Check Answer</button>
-    <button onclick="toggleSolution(this)">Show Solution</button>
-    <div class="solution">Solution: Yet to be added.</div>
-</div>
-<div class="question">
-    <p><strong>Q9:</strong> Four sides and a diagonal of a quadrilateral are of lengths 10, 20, 28, 50, 75, not necessarily in that order. Which
-amongst them is the only possible length of the diagonal?</p>
-    <input type="number" class="answer-input" min="0" max="99">
-    <button onclick="checkAnswer(28)">Check Answer</button>
-    <button onclick="toggleSolution(this)">Show Solution</button>
-    <div class="solution">Solution: Yet to be added.</div>
-</div>
-<div class="question">
-    <p><strong>Q10:</strong> The height and the base radius of a closed right circular cylinder are positive integers and its total surface area is
-numerically equal to its volume. If its volume is kπ where k is a positive integer, what is the smallest possible value of k?</p>
-    <input type="number" class="answer-input" min="0" max="99">
-    <button onclick="checkAnswer(54)">Check Answer</button>
-    <button onclick="toggleSolution(this)">Show Solution</button>
-    <div class="solution">Solution: Yet to be added.</div>
-</div>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2023 Easy Paper</title>
+<title>IOQM 2025 Easy</title>
 
 <!-- Particles.js for dynamic background -->
 <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.10.1/tsparticles.min.js"></script>
@@ -140,7 +60,7 @@ button:hover { box-shadow:0 0 20px #0ff; transform: scale(1.05); }
 <div id="particles-js"></div>
 
 <div id="content">
-    <h1>2023 Easy Paper</h1>
+    <h1>IOQM 2025 Easy</h1>
     <div id="question-container"></div>
     <div style="text-align:center; margin-top:20px;">
         <button id="prev-btn">← Previous</button>
@@ -215,7 +135,7 @@ document.getElementById('prev-btn').addEventListener('click', () => {
 });
 document.getElementById('next-btn').addEventListener('click', () => {
     if(currentIndex < questions.length-1) { currentIndex++; renderQuestion(); }
-    else alert("🎉 You have completed the paper!");
+    else alert("🎉 You have completed the easy questions of IOQM 2025!");
 });
 
 // ---------- Initial Render ----------
