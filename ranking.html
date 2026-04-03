@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>State Rankings by Top 10% Score</title>
+<style>
+body { font-family: Arial; background:#111; color:#fff; text-align:center; margin:50px; }
+select { margin:10px; padding:5px; font-size:16px; }
+table { margin:auto; border-collapse: collapse; width:60%; margin-top:20px; }
+th, td { padding:10px; border:1px solid #0ff; text-align:center; }
+th { background:#0ff; color:#000; }
+.top1 { background:#ff0; color:#000; }
+.top2 { background:#0f0; color:#000; }
+.top3 { background:#f00; color:#fff; }
+</style>
+</head>
+<body>
+<h1>🏆 State Rankings by Top 10% Score</h1>
+
+<label>Select Year:</label>
+<select id="yearSelect">
+    <option value="">--Select Year--</option>
+</select>
+
+<table id="rankingTable">
+    <thead>
+        <tr><th>Rank</th><th>State</th><th>Cutoff</th></tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+let dataJSON = {};
+
+// Load JSON dynamically
+async function loadData() {
+    const res = await fetch('cutoffs.json?ts=' + new Date().getTime());
+    dataJSON = await res.json();
+    populateDropdown();
+}
+
+function populateDropdown() {
+    const yearSelect = document.getElementById('yearSelect');
+    Object.keys(dataJSON).forEach(y => yearSelect.add(new Option(y,y)));
+    yearSelect.onchange = updateRanking;
+}
+
+function updateRanking() {
+    const year = document.getElementById('yearSelect').value;
+    if(!year) return;
+
+    const states = Object.entries(dataJSON[year]);
+    // Sort descending by cutoff
+    states.sort((a,b)=>b[1]-a[1]);
+
+    // Top 10% calculation (ceil)
+    const topCount = Math.ceil(states.length * 0.1);
+    const tbody = document.querySelector("#rankingTable tbody");
+    tbody.innerHTML = "";
+
+    states.forEach(([state,cutoff],index)=>{
+        const tr = document.createElement('tr');
+        if(index===0) tr.classList.add('top1');
+        else if(index===1) tr.classList.add('top2');
+        else if(index===2) tr.classList.add('top3');
+
+        tr.innerHTML = `<td>${index+1}</td><td>${state}</td><td>${cutoff}</td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+loadData();
+</script>
+
+</body>
+</html>
