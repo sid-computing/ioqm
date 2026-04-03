@@ -1,7 +1,7 @@
 [
-    {"state": "California", "cutoff": 85},
-    {"state": "Texas", "cutoff": 78},
-    {"state": "Florida", "cutoff": 90},
-    {"state": "New York", "cutoff": 82},
-    {"state": "Illinois", "cutoff": 88}
+    {"state": "Delhi", "cutoff": 17},
+    {"state": "Rajasthan", "cutoff": 13},
+    {"state": "Northwest", "cutoff": 12},
+    {"state": "Telangana", "cutoff": 13},
+    {"state": "Andhra", "cutoff": 13}
 ]
