@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IOQM 2025 Medium</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1e293b;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-solid: #111827;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #38bdf8;
+      --accent-dark: #0ea5e9;
+      --success-bg: rgba(34, 197, 94, 0.16);
+      --success-text: #bbf7d0;
+      --error-bg: rgba(239, 68, 68, 0.16);
+      --error-text: #fecaca;
+      --hint-bg: rgba(250, 204, 21, 0.13);
+      --hint-text: #fde68a;
+      --solution-bg: rgba(59, 130, 246, 0.14);
+      --solution-text: #dbeafe;
+      --border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), #0b1220);
+    }
+
+    body {
+      padding: 24px 14px 40px;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 15px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .back-link:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .paper-tag {
+      color: var(--muted);
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px 20px 20px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .progress-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .progress-head strong {
+      font-size: 1rem;
+    }
+
+    .progress-text {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #7dd3fc);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px 20px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .question-number {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .review-btn {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .review-btn.active {
+      background: rgba(250, 204, 21, 0.18);
+      color: #fde68a;
+      border-color: rgba(250, 204, 21, 0.35);
+    }
+
+    .question-text {
+      font-size: clamp(1.08rem, 2vw, 1.22rem);
+      line-height: 1.8;
+      margin: 0 0 18px;
+    }
+
+    .answer-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .answer-input {
+      width: 180px;
+      max-width: 100%;
+      padding: 13px 14px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text);
+      outline: none;
+    }
+
+    .answer-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #062033;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: #67d2fb;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .feedback,
+    .hint-box,
+    .solution-box {
+      display: none;
+      border-radius: 14px;
+      padding: 14px 15px;
+      margin-top: 12px;
+      line-height: 1.65;
+      font-size: 0.98rem;
+    }
+
+    .feedback.success {
+      display: block;
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid rgba(34, 197, 94, 0.28);
+    }
+
+    .feedback.error {
+      display: block;
+      background: var(--error-bg);
+      color: var(--error-text);
+      border: 1px solid rgba(239, 68, 68, 0.28);
+    }
+
+    .hint-box.visible {
+      display: block;
+      background: var(--hint-bg);
+      color: var(--hint-text);
+      border: 1px solid rgba(250, 204, 21, 0.28);
+    }
+
+    .solution-box.visible {
+      display: block;
+      background: var(--solution-bg);
+      color: var(--solution-text);
+      border: 1px solid rgba(59, 130, 246, 0.28);
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .nav-row .left,
+    .nav-row .right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .overview-card,
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .overview-card h2,
+    .summary-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.22rem;
+    }
+
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.92rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .chip.active {
+      outline: 2px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .chip.review {
+      background: rgba(250, 204, 21, 0.16);
+      color: #fde68a;
+    }
+
+    .chip.correct {
+      background: rgba(34, 197, 94, 0.16);
+      color: #bbf7d0;
+    }
+
+    .chip.incorrect {
+      background: rgba(239, 68, 68, 0.16);
+      color: #fecaca;
+    }
+
+    .chip.unanswered {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+    }
+
+    .chip button {
+      all: unset;
+      cursor: pointer;
+    }
+
+    .summary-card {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .summary-card.visible {
+      display: block;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 16px 0 18px;
+    }
+
+    .summary-stat {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .summary-stat .label {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+
+    .summary-stat .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .summary-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.93rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 14px 10px 28px;
+      }
+
+      .hero,
+      .progress-card,
+      .question-card,
+      .overview-card,
+      .summary-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .answer-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .answer-input {
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .nav-row {
+        flex-direction: column;
+      }
+
+      .nav-row .left,
+      .nav-row .right {
+        width: 100%;
+      }
+
+      .nav-row .left .btn,
+      .nav-row .right .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <a class="back-link" href="index.html">← Back to papers</a>
+      <div class="paper-tag">IOQM 2025 · Medium · Practice Mode</div>
+    </div>
+
+    <section class="hero">
+      <h1>IOQM 2025 Medium</h1>
+      <p>
+        Work through one question at a time. Check your answer, open a hint if needed,
+        and reveal the full solution only when you want it. Your progress is saved automatically on this device.
+      </p>
+    </section>
+
+    <section class="progress-card">
+      <div class="progress-head">
+        <strong id="progress-label">Question 1 of 10</strong>
+        <div class="progress-text" id="status-label">0 answered · 0 correct · 0 marked for review</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="question-card">
+      <div class="question-meta">
+        <div class="question-number" id="question-number">Question 1</div>
+        <button class="review-btn" id="review-btn" type="button">☆ Mark for review</button>
+      </div>
+
+      <p class="question-text" id="question-text"></p>
+
+      <div class="answer-row">
+        <input
+          id="answer-input"
+          class="answer-input"
+          type="number"
+          min="0"
+          max="99"
+          placeholder="Enter answer"
+          inputmode="numeric"
+        />
+        <button class="btn btn-primary" id="check-btn" type="button">Check Answer</button>
+        <button class="btn btn-secondary" id="hint-btn" type="button">Show Hint</button>
+        <button class="btn btn-secondary" id="solution-btn" type="button">Show Solution</button>
+      </div>
+
+      <div id="feedback" class="feedback"></div>
+      <div id="hint-box" class="hint-box"></div>
+      <div id="solution-box" class="solution-box"></div>
+    </section>
+
+    <div class="nav-row">
+      <div class="left">
+        <button class="btn btn-secondary" id="prev-btn" type="button">← Previous</button>
+      </div>
+      <div class="right">
+        <button class="btn btn-secondary" id="next-btn" type="button">Next →</button>
+        <button class="btn btn-primary" id="finish-btn" type="button">Finish Paper</button>
+      </div>
+    </div>
+
+    <section class="overview-card">
+      <h2>Question Overview</h2>
+      <div class="chips" id="question-chips"></div>
+    </section>
+
+    <section class="summary-card" id="summary-card">
+      <h2>Session Summary</h2>
+      <div class="small-note">
+        This summary is based on the answers you checked on this device. You can retry the whole set or continue reviewing any question.
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-stat">
+          <div class="label">Total Questions</div>
+          <div class="value" id="summary-total">0</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Answered</div>
+          <div class="value" id="summary-answered">0</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Correct</div>
+          <div class="value" id="summary-correct">0</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Marked for Review</div>
+          <div class="value" id="summary-review">0</div>
+        </div>
+      </div>
+
+      <div class="summary-actions">
+        <button class="btn btn-secondary" id="hide-summary-btn" type="button">Hide Summary</button>
+        <button class="btn btn-primary" id="reset-btn" type="button">Reset Progress</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "ioqm_2025_medium_progress_v1";
+
+    const questions = [
+      {
+        q: "Consider a fraction a/b ≠ 3/4, where a, b are positive integers with gcd(a, b) = 1 and b ≤ 15. If this fraction is chosen closest to 3/4 amongst all such fractions, then what is the value of a + b?.",
+        a: 61,
+        hint: "To be added."
+      },
+      {
+        q: "Consider five­-digit positive integers of the form abcab that are divisible by the two digit number ab but not divisible by 13. What is the largest possible sum of the digits of such a number?",
+        a: 33,
+        hint: "To be added."
+      },
+      {
+        q: "Three sides of a quadrilateral are a = 4√3, b = 9 and c = √3. The sides a and b enclose an angle of 30°, and the sides b and c enclose an angle of 90°. If the acute angle between the diagonals is x°, what is the value of x?",
+        a: 60,
+        hint: "List the integer factor pairs of 20 and compare the perimeters."
+      },
+      {
+        q: "How many isosceles integer-sided triangles are there with perimeter 23?",
+        a: 6,
+        hint: "Write the sides as a, a, b with 2a + b = 23, then use the triangle inequality."
+      },
+      {
+        q: "How many 3-digit numbers abc in base 10 are there with a ≠ 0 and c = a + b?",
+        a: 45,
+        hint: "Since c is a digit, a + b must be at most 9. Count pairs (a, b) with a from 1 to 9."
+      },
+      {
+        q: "The age of a person in 2025 is a perfect square. His age was also a perfect square in 2012. His age will be a perfect cube m years after 2025. Determine the smallest value of m.",
+        a: 15,
+        hint: "The ages in 2012 and 2025 differ by 13. Find two perfect squares differing by 13."
+      },
+      {
+        q: "The sum of two real numbers is a positive integer n and the sum of their squares is n + 1012. Find the maximum possible value of n.",
+        a: 46,
+        hint: "If x + y = n, then x² + y² is smallest when x = y = n/2. Use that lower bound."
+      },
+      {
+        q: "A quadrilateral has four vertices A, B, C, D. We colour each vertex red, blue, green, or yellow so that every side of the quadrilateral and the diagonal AC have endpoints of different colours. In how many ways can this be done?",
+        a: 48,
+        hint: "Choose a colour for A, then C must be different, and B and D each avoid two colours."
+      },
+      {
+        q: "Four sides and a diagonal of a quadrilateral are of lengths 10, 20, 28, 50, 75, not necessarily in that order. Which among them is the only possible length of the diagonal?",
+        a: 28,
+        hint: "A diagonal splits the quadrilateral into two triangles. Test whether the remaining four lengths can be split into two valid triangles."
+      },
+      {
+        q: "The height and base radius of a closed right circular cylinder are positive integers and its total surface area is numerically equal to its volume. If its volume is kπ where k is a positive integer, what is the smallest possible value of k?",
+        a: 54,
+        hint: "Set volume = surface area: πr²h = 2πr² + 2πrh. Simplify and search positive integer solutions."
+      }
+    ];
+
+    let currentIndex = 0;
+    let state = {
+      currentIndex: 0,
+      answers: Array(questions.length).fill(""),
+      checked: Array(questions.length).fill(false),
+      correct: Array(questions.length).fill(false),
+      feedbackShown: Array(questions.length).fill(""),
+      hintOpened: Array(questions.length).fill(false),
+      solutionOpened: Array(questions.length).fill(false),
+      reviewMarked: Array(questions.length).fill(false)
+    };
+
+    const els = {
+      progressLabel: document.getElementById("progress-label"),
+      statusLabel: document.getElementById("status-label"),
+      progressFill: document.getElementById("progress-fill"),
+      questionNumber: document.getElementById("question-number"),
+      reviewBtn: document.getElementById("review-btn"),
+      questionText: document.getElementById("question-text"),
+      answerInput: document.getElementById("answer-input"),
+      checkBtn: document.getElementById("check-btn"),
+      hintBtn: document.getElementById("hint-btn"),
+      solutionBtn: document.getElementById("solution-btn"),
+      feedback: document.getElementById("feedback"),
+      hintBox: document.getElementById("hint-box"),
+      solutionBox: document.getElementById("solution-box"),
+      prevBtn: document.getElementById("prev-btn"),
+      nextBtn: document.getElementById("next-btn"),
+      finishBtn: document.getElementById("finish-btn"),
+      questionChips: document.getElementById("question-chips"),
+      summaryCard: document.getElementById("summary-card"),
+      summaryTotal: document.getElementById("summary-total"),
+      summaryAnswered: document.getElementById("summary-answered"),
+      summaryCorrect: document.getElementById("summary-correct"),
+      summaryReview: document.getElementById("summary-review"),
+      hideSummaryBtn: document.getElementById("hide-summary-btn"),
+      resetBtn: document.getElementById("reset-btn")
+    };
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        if (
+          parsed &&
+          Array.isArray(parsed.answers) &&
+          parsed.answers.length === questions.length
+        ) {
+          state = parsed;
+          currentIndex = Number.isInteger(state.currentIndex) ? state.currentIndex : 0;
+          if (currentIndex < 0 || currentIndex >= questions.length) currentIndex = 0;
+        }
+      } catch (e) {
+        console.error("Could not load saved progress:", e);
+      }
+    }
+
+    function countAnswered() {
+      return state.answers.filter(v => String(v).trim() !== "").length;
+    }
+
+    function countCorrect() {
+      return state.correct.filter(Boolean).length;
+    }
+
+    function countReview() {
+      return state.reviewMarked.filter(Boolean).length;
+    }
+
+    function setFeedback(type, text) {
+      els.feedback.className = "feedback";
+      if (!type || !text) {
+        els.feedback.textContent = "";
+        els.feedback.style.display = "none";
+        return;
+      }
+      els.feedback.textContent = text;
+      els.feedback.classList.add(type);
+      els.feedback.style.display = "block";
+    }
+
+    function renderProgress() {
+      const answered = countAnswered();
+      const correct = countCorrect();
+      const review = countReview();
+
+      els.progressLabel.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
+      els.statusLabel.textContent = `${answered} answered · ${correct} correct · ${review} marked for review`;
+      els.progressFill.style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+
+      els.questionNumber.textContent = `Question ${currentIndex + 1}`;
+      els.questionText.textContent = q.q;
+      els.answerInput.value = state.answers[currentIndex];
+      els.answerInput.focus();
+
+      els.reviewBtn.classList.toggle("active", state.reviewMarked[currentIndex]);
+      els.reviewBtn.textContent = state.reviewMarked[currentIndex]
+        ? "★ Marked for review"
+        : "☆ Mark for review";
+
+      const feedbackType = state.feedbackShown[currentIndex];
+      if (feedbackType === "success") {
+        setFeedback("success", "✅ Correct — nice work.");
+      } else if (feedbackType === "error") {
+        setFeedback("error", "❌ Not quite. Try once more, or open the hint.");
+      } else {
+        setFeedback("", "");
+      }
+
+      els.hintBox.textContent = `Hint: ${q.hint}`;
+      els.hintBox.classList.toggle("visible", state.hintOpened[currentIndex]);
+      els.hintBtn.textContent = state.hintOpened[currentIndex] ? "Hide Hint" : "Show Hint";
+
+      els.solutionBox.textContent = `Solution: ${q.a}`;
+      els.solutionBox.classList.toggle("visible", state.solutionOpened[currentIndex]);
+      els.solutionBtn.textContent = state.solutionOpened[currentIndex] ? "Hide Solution" : "Show Solution";
+
+      els.prevBtn.disabled = currentIndex === 0;
+      els.nextBtn.disabled = currentIndex === questions.length - 1;
+
+      renderProgress();
+      renderOverview();
+      saveState();
+    }
+
+    function renderOverview() {
+      els.questionChips.innerHTML = "";
+
+      questions.forEach((_, i) => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+
+        if (state.reviewMarked[i]) chip.classList.add("review");
+        else if (state.checked[i] && state.correct[i]) chip.classList.add("correct");
+        else if (state.checked[i] && !state.correct[i]) chip.classList.add("incorrect");
+        else chip.classList.add("unanswered");
+
+        if (i === currentIndex) chip.classList.add("active");
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = `Q${i + 1}`;
+        button.addEventListener("click", () => {
+          currentIndex = i;
+          state.currentIndex = currentIndex;
+          renderQuestion();
+        });
+
+        chip.appendChild(button);
+        els.questionChips.appendChild(chip);
+      });
+    }
+
+    function checkAnswer() {
+      const raw = els.answerInput.value.trim();
+
+      if (raw === "") {
+        setFeedback("error", "Please enter a non-negative integer less than 100.");
+        return;
+      }
+
+      const val = Number(raw);
+
+      if (!Number.isInteger(val) || val < 0 || val >= 100) {
+        setFeedback("error", "Please enter a non-negative integer less than 100.");
+        return;
+      }
+
+      state.answers[currentIndex] = String(val);
+      state.checked[currentIndex] = true;
+
+      if (val === questions[currentIndex].a) {
+        state.correct[currentIndex] = true;
+        state.feedbackShown[currentIndex] = "success";
+        setFeedback("success", "✅ Correct — nice work.");
+      } else {
+        state.correct[currentIndex] = false;
+        state.feedbackShown[currentIndex] = "error";
+        setFeedback("error", "❌ Not quite. Try once more, or open the hint.");
+      }
+
+      saveState();
+      renderProgress();
+      renderOverview();
+    }
+
+    function toggleHint() {
+      state.hintOpened[currentIndex] = !state.hintOpened[currentIndex];
+      renderQuestion();
+    }
+
+    function toggleSolution() {
+      state.solutionOpened[currentIndex] = !state.solutionOpened[currentIndex];
+      renderQuestion();
+    }
+
+    function toggleReview() {
+      state.reviewMarked[currentIndex] = !state.reviewMarked[currentIndex];
+      renderQuestion();
+    }
+
+    function goPrev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        state.currentIndex = currentIndex;
+        renderQuestion();
+      }
+    }
+
+    function goNext() {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        state.currentIndex = currentIndex;
+        renderQuestion();
+      }
+    }
+
+    function showSummary() {
+      els.summaryTotal.textContent = questions.length;
+      els.summaryAnswered.textContent = countAnswered();
+      els.summaryCorrect.textContent = countCorrect();
+      els.summaryReview.textContent = countReview();
+      els.summaryCard.classList.add("visible");
+      els.summaryCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function hideSummary() {
+      els.summaryCard.classList.remove("visible");
+    }
+
+    function resetProgress() {
+      const confirmed = confirm("Reset all saved progress for this paper?");
+      if (!confirmed) return;
+
+      state = {
+        currentIndex: 0,
+        answers: Array(questions.length).fill(""),
+        checked: Array(questions.length).fill(false),
+        correct: Array(questions.length).fill(false),
+        feedbackShown: Array(questions.length).fill(""),
+        hintOpened: Array(questions.length).fill(false),
+        solutionOpened: Array(questions.length).fill(false),
+        reviewMarked: Array(questions.length).fill(false)
+      };
+
+      currentIndex = 0;
+      saveState();
+      hideSummary();
+      renderQuestion();
+    }
+
+    els.checkBtn.addEventListener("click", checkAnswer);
+    els.hintBtn.addEventListener("click", toggleHint);
+    els.solutionBtn.addEventListener("click", toggleSolution);
+    els.reviewBtn.addEventListener("click", toggleReview);
+    els.prevBtn.addEventListener("click", goPrev);
+    els.nextBtn.addEventListener("click", goNext);
+    els.finishBtn.addEventListener("click", showSummary);
+    els.hideSummaryBtn.addEventListener("click", hideSummary);
+    els.resetBtn.addEventListener("click", resetProgress);
+
+    els.answerInput.addEventListener("input", () => {
+      state.answers[currentIndex] = els.answerInput.value;
+      state.currentIndex = currentIndex;
+      saveState();
+    });
+
+    els.answerInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        checkAnswer();
+      }
+    });
+
+    loadState();
+    renderQuestion();
+  </script>
+</body>
+</html>
