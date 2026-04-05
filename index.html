@@ -12,7 +12,10 @@
   <script defer src="assets/js/index.js"></script>
 </head>
 <body>
-  <div class="page-bg"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+  <div class="bg-glow glow-3"></div>
 
   <header class="site-header">
     <div class="container topbar">
@@ -34,64 +37,81 @@
 
   <main class="container main-content">
     <section class="hero-card">
+      <div class="hero-badge">Mathematics • Olympiad • Practice</div>
+
       <p class="made-by">
         Made by <strong>Siddhant</strong>, <strong>Indian Statistical Institute, New Delhi</strong>
       </p>
 
-      <h1>Practise IOQM in a calm, student-friendly way</h1>
+      <h1>Train for IOQM with a sharper, calmer, more modern interface</h1>
+
       <p class="hero-text">
-        Choose a specific year paper, or jump into difficulty-wise practice.
-        Everything is designed to feel simple, focused, and easy on the eyes.
+        Practise year-wise papers, filter by difficulty, and build consistency without the clutter.
+        Designed to feel focused, futuristic, and student-friendly.
       </p>
+
+      <div class="hero-math">
+        <span>∑</span>
+        <span>π</span>
+        <span>√</span>
+        <span>∫</span>
+        <span>∞</span>
+        <span>△</span>
+      </div>
     </section>
 
     <section class="grid two-col">
       <article class="card">
         <div class="card-header">
           <h2>Past Papers by Year</h2>
-          <p>Select a year to open that paper directly.</p>
+          <p>Select a year first, then press Enter.</p>
         </div>
 
-        <div class="button-grid" id="year-grid">
-          <a class="choice-btn featured-year" href="2025_NW.html">2025 NW</a>
-          <a class="choice-btn" href="2025.html">2025</a>
-          <a class="choice-btn" href="2024.html">2024</a>
-          <a class="choice-btn" href="2023.html">2023</a>
-          <a class="choice-btn" href="2022.html">2022</a>
-          <a class="choice-btn" href="2021.html">2021</a>
-          <a class="choice-btn" href="2020.html">2020</a>
-          <a class="choice-btn" href="2019.html">2019</a>
-          <a class="choice-btn" href="2018.html">2018</a>
-          <a class="choice-btn" href="2017.html">2017</a>
-        </div>
+        <div class="chooser-box">
+          <label for="year-select" class="chooser-label">Choose year / paper</label>
+          <select id="year-select" class="chooser-select">
+            <option value="">Select a paper</option>
+            <option value="2025_NW.html">2025 NW</option>
+            <option value="2025.html">2025</option>
+            <option value="2024.html">2024</option>
+            <option value="2023.html">2023</option>
+            <option value="2022.html">2022</option>
+            <option value="2021.html">2021</option>
+            <option value="2020.html">2020</option>
+            <option value="2019.html">2019</option>
+            <option value="2018.html">2018</option>
+            <option value="2017.html">2017</option>
+            <option value="2016.html">2016</option>
+            <option value="2015.html">2015</option>
+            <option value="2014.html">2014</option>
+            <option value="2013.html">2013</option>
+            <option value="2012.html">2012</option>
+          </select>
 
-        <p class="helper-text">
-          To add a new year later, just add another button like
-          <code>&lt;a href="2026.html"&gt;2026&lt;/a&gt;</code>.
-        </p>
+          <button class="enter-btn" id="year-enter-btn" type="button">
+            Enter Year Paper
+          </button>
+        </div>
       </article>
 
       <article class="card">
         <div class="card-header">
           <h2>Practice by Difficulty</h2>
-          <p>Open combined level-wise practice pages.</p>
+          <p>Select a difficulty level, then press Enter.</p>
         </div>
 
-        <div class="difficulty-stack">
-          <a class="difficulty-btn easy" href="easy.html">
-            <span class="level-title">Easy</span>
-            <span class="level-sub">Warm-up and build confidence</span>
-          </a>
+        <div class="chooser-box">
+          <label for="difficulty-select" class="chooser-label">Choose difficulty</label>
+          <select id="difficulty-select" class="chooser-select">
+            <option value="">Select difficulty</option>
+            <option value="easy.html">Easy</option>
+            <option value="medium.html">Medium</option>
+            <option value="hard.html">Hard</option>
+          </select>
 
-          <a class="difficulty-btn medium" href="medium.html">
-            <span class="level-title">Medium</span>
-            <span class="level-sub">Core IOQM-level practice</span>
-          </a>
-
-          <a class="difficulty-btn hard" href="hard.html">
-            <span class="level-title">Hard</span>
-            <span class="level-sub">Challenging and olympiad-style</span>
-          </a>
+          <button class="enter-btn" id="difficulty-enter-btn" type="button">
+            Enter Practice Mode
+          </button>
         </div>
       </article>
     </section>
@@ -99,19 +119,19 @@
     <section class="grid three-col">
       <article class="mini-card">
         <h3>Past Cut-offs</h3>
-        <p>See earlier qualifying trends and targets.</p>
+        <p>See earlier qualifying trends and realistic score targets.</p>
         <a class="mini-link" href="cutoff-dashboard.html">Open cut-offs</a>
       </article>
 
       <article class="mini-card">
-        <h3>Practice</h3>
-        <p>Go to your broader practice section.</p>
+        <h3>Practice Hub</h3>
+        <p>Go to your wider practice section and revision area.</p>
         <a class="mini-link" href="practice.html">Open practice</a>
       </article>
 
       <article class="mini-card">
         <h3>State Rankings</h3>
-        <p>Explore rankings and state-wise data.</p>
+        <p>Explore rankings and state-wise performance data.</p>
         <a class="mini-link" href="ranking.html">Open rankings</a>
       </article>
     </section>
@@ -119,12 +139,8 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>
-        © 2026 Siddhant, Indian Statistical Institute, New Delhi. All rights reserved.
-      </p>
-      <p>
-        This resource is created for student learning and practice.
-      </p>
+      <p>© 2026 Siddhant, Indian Statistical Institute, New Delhi.</p>
+      <p>This resource is built for student learning, practice, and olympiad preparation.</p>
       <p>
         YouTube:
         <a
@@ -132,7 +148,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          https://www.youtube.com/@Siddhant_ISI
+          @Siddhant_ISI
         </a>
       </p>
     </div>
