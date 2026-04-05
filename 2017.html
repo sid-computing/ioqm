@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IOQM 2025 Mixed Difficulty</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1e293b;
+      --card: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #38bdf8;
+      --success-bg: rgba(34, 197, 94, 0.16);
+      --success-text: #bbf7d0;
+      --error-bg: rgba(239, 68, 68, 0.16);
+      --error-text: #fecaca;
+      --hint-bg: rgba(250, 204, 21, 0.13);
+      --hint-text: #fde68a;
+      --solution-bg: rgba(59, 130, 246, 0.14);
+      --solution-text: #dbeafe;
+      --border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      --radius: 18px;
+
+      --easy-bg1: #16331d;
+      --easy-bg2: #1f4d2b;
+      --easy-accent: #4ade80;
+
+      --moderate-bg1: #3b2a10;
+      --moderate-bg2: #5a3a12;
+      --moderate-accent: #fbbf24;
+
+      --hard-bg1: #3b1111;
+      --hard-bg2: #5a1717;
+      --hard-accent: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      transition: background 0.45s ease;
+    }
+
+    body.easy-mode {
+      background: linear-gradient(135deg, var(--easy-bg1), var(--easy-bg2), #0b1220);
+      --accent: var(--easy-accent);
+    }
+
+    body.moderate-mode {
+      background: linear-gradient(135deg, var(--moderate-bg1), var(--moderate-bg2), #0b1220);
+      --accent: var(--moderate-accent);
+    }
+
+    body.hard-mode {
+      background: linear-gradient(135deg, var(--hard-bg1), var(--hard-bg2), #0b1220);
+      --accent: var(--hard-accent);
+    }
+
+    body {
+      padding: 24px 14px 40px;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 15px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .back-link:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .paper-tag {
+      color: var(--muted);
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px 20px 20px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .difficulty-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.06);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .difficulty-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    .progress-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .progress-head strong {
+      font-size: 1rem;
+    }
+
+    .progress-text {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0.8));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px 20px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .question-number {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .question-difficulty {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .review-btn {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .review-btn.active {
+      background: rgba(250, 204, 21, 0.18);
+      color: #fde68a;
+      border-color: rgba(250, 204, 21, 0.35);
+    }
+
+    .question-text {
+      font-size: clamp(1.08rem, 2vw, 1.22rem);
+      line-height: 1.8;
+      margin: 0 0 18px;
+    }
+
+    .answer-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .answer-input {
+      width: 180px;
+      max-width: 100%;
+      padding: 13px 14px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text);
+      outline: none;
+    }
+
+    .answer-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #062033;
+      font-weight: 700;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .feedback,
+    .hint-box,
+    .solution-box {
+      display: none;
+      border-radius: 14px;
+      padding: 14px 15px;
+      margin-top: 12px;
+      line-height: 1.65;
+      font-size: 0.98rem;
+    }
+
+    .feedback.success {
+      display: block;
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid rgba(34, 197, 94, 0.28);
+    }
+
+    .feedback.error {
+      display: block;
+      background: var(--error-bg);
+      color: var(--error-text);
+      border: 1px solid rgba(239, 68, 68, 0.28);
+    }
+
+    .hint-box.visible {
+      display: block;
+      background: var(--hint-bg);
+      color: var(--hint-text);
+      border: 1px solid rgba(250, 204, 21, 0.28);
+    }
+
+    .solution-box.visible {
+      display: block;
+      background: var(--solution-bg);
+      color: var(--solution-text);
+      border: 1px solid rgba(59, 130, 246, 0.28);
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .nav-row .left,
+    .nav-row .right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .overview-card,
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .overview-card h2,
+    .summary-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.22rem;
+    }
+
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.92rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .chip.active {
+      outline: 2px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .chip.review {
+      background: rgba(250, 204, 21, 0.16);
+      color: #fde68a;
+    }
+
+    .chip.correct {
+      background: rgba(34, 197, 94, 0.16);
+      color: #bbf7d0;
+    }
+
+    .chip.incorrect {
+      background: rgba(239, 68, 68, 0.16);
+      color: #fecaca;
+    }
+
+    .chip.unanswered {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+    }
+
+    .chip button {
+      all: unset;
+      cursor: pointer;
+    }
+
+    .summary-card {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .summary-card.visible {
+      display: block;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 16px 0 18px;
+    }
+
+    .summary-stat {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .summary-stat .label {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+
+    .summary-stat .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .summary-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.93rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 14px 10px 28px;
+      }
+
+      .hero,
+      .progress-card,
+      .question-card,
+      .overview-card,
+      .summary-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .answer-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .answer-input {
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .nav-row {
+        flex-direction: column;
+      }
+
+      .nav-row .left,
+      .nav-row .right {
+        width: 100%;
+      }
+
+      .nav-row .left .btn,
+      .nav-row .right .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="easy-mode">
+  <div class="app">
+    <div class="topbar">
+      <a class="back-link" href="index.html">← Back to papers</a>
+      <div class="paper-tag">IOQM 2017 · Practice Mode</div>
+    </div>
+
+    <section class="hero">
+      <h1>IOQM 2017</h1>
+      <p>
+        Work through one question at a time. The first 6 questions are Easy, the next 15 are Moderate,
+        and the last 9 are Hard. The page theme changes as you move through the paper.
+      </p>
+      <div class="difficulty-banner" id="difficulty-banner">
+        <span class="difficulty-dot"></span>
+        <span id="difficulty-banner-text">Current Section: Easy</span>
+      </div>
+    </section>
+
+    <section class="progress-card">
+      <div class="progress-head">
+        <strong id="progress-label">Question 1 of 10</strong>
+        <div class="progress-text" id="status-label">0 answered · 0 correct · 0 marked for review</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="question-card">
+      <div class="question-meta">
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <div class="question-number" id="question-number">Question 1</div>
+          <div class="question-difficulty" id="question-difficulty">Easy</div>
+        </div>
+        <button class="review-btn" id="review-btn" type="button">☆ Mark for review</button>
+      </div>
+
+      <p class="question-text" id="question-text"></p>
+
+      <div class="answer-row">
+        <input
+          id="answer-input"
+          class="answer-input"
+          type="number"
+          min="0"
+          max="99"
+          placeholder="Enter answer"
+          inputmode="numeric"
+        />
+        <button class="btn btn-primary" id="check-btn" type="button">Check Answer</button>
+        <button class="btn btn-secondary" id="hint-btn" type="button">Show Hint</button>
+        <button class="btn btn-secondary" id="solution-btn" type="button">Show Solution</button>
+      </div>
+
+      <div id="feedback" class="feedback"></div>
+      <div id="hint-box" class="hint-box"></div>
+      <div id="solution-box" class="solution-box"></div>
+    </section>
+
+    <div class="nav-row">
+      <div class="left">
+        <button class="btn btn-secondary" id="prev-btn" type="button">← Previous</button>
+      </div>
+      <div class="right">
+        <button class="btn btn-secondary" id="next-btn" type="button">Next →</button>
+        <button class="btn btn-primary" id="finish-btn" type="button">Finish Paper</button>
+      </div>
+    </div>
+
+    <section class="overview-card">
+      <h2>Question Overview</h2>
+      <div class="chips" id="question-chips"></div>
+    </section>
+
+    <section class="summary-card" id="summary-card">
+      <h2>Session Summary</h2>
+      <div class="small-note">
+        This summary is based on the answers you checked on this device. You can retry the whole set or continue reviewing any question.
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-stat">
+          <div class="label">Total Questions</div>
+          <div class="value" id="summary-total">0</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Answered</div>
+          <div class="value" id="summary-answered">0</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Correct</div>
+          <div class="value" id="summary-correct">0</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Marked for Review</div>
+          <div class="value" id="summary-review">0</div>
+        </div>
+      </div>
+
+      <div class="summary-actions">
+        <button class="btn btn-secondary" id="hide-summary-btn" type="button">Hide Summary</button>
+        <button class="btn btn-primary" id="reset-btn" type="button">Reset Progress</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "ioqm_2017_mixed_progress_v1";
+
+    const questions = [
+{
+  q: "A book is published in three volumes with continuous page numbering. Second has 50 more pages than first, third is 1.5× second. Sum of first pages is 1709. Find largest prime factor of last page.",
+  a: 17,
+  hint: "Let first volume have x pages and form equation from first page numbers.",
+  difficulty: "Easy",
+  video: ""
+},
+{
+  q: "Quadrilateral with sides 13,13,20,20 and diagonal 24 has an incircle. Find closest integer to inradius.",
+  a: 8,
+  hint: "Use area = r × semiperimeter.",
+  difficulty: "Easy",
+  video: ""
+},
+{
+  q: "Count 6-digit numbers of form abccba with b odd divisible by 7.",
+  a: 70,
+  hint: "Use divisibility rule mod 7.",
+  difficulty: "Easy",
+  video: ""
+},
+{
+  q: "Equation 166×56=8590 holds in base b≥10. Find sum of all such bases.",
+  a: 12,
+  hint: "Convert to polynomial in b.",
+  difficulty: "Easy",
+  video: ""
+},
+{
+  q: "Trapezium with incircle touches bases at points with given segments. Find PQ.",
+  a: 84,
+  hint: "Use equal tangent lengths.",
+  difficulty: "Easy",
+  video: ""
+},
+{
+  q: "Integers satisfy a+b−c=1 and a²+b²−c²=−1. Find sum of possible a²+b²+c².",
+  a: 18,
+  hint: "Rewrite second using first.",
+  difficulty: "Easy",
+  video: ""
+},
+
+{
+  q: "Point inside regular hexagon has distances 8,8,16 from consecutive vertices. Find radius of circumcircle.",
+  a: 14,
+  hint: "Use cosine rule in triangles.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Circle geometry with chord AB and angles 30°,20°. Find ∠CDO.",
+  a: 80,
+  hint: "Track angles using cyclic properties.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "If a+b is root of x²+ax+b=0 find maximum b².",
+  a: 81,
+  hint: "Substitute root and use discriminant.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Triangle medians from B and C perpendicular, median from A is 30. Find (sum of squares of sides)/100.",
+  a: 24,
+  hint: "Use Apollonius theorem.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Number of cups with and without handles such that choosing 2 without and 3 with gives 1200 ways. Find maximum cups.",
+  a: 29,
+  hint: "Factor 1200 into combinations.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Number of ±1 sequences of length 8 with weighted sum multiple of 3.",
+  a: 88,
+  hint: "Reduce expression mod 3.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Right triangle with altitude 3 and angle bisector 4. Find median from right angle.",
+  a: 24,
+  hint: "Use relations between sides.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Given x=cos1°cos2°…cos89° and y=cos2°cos6°…cos86°, find nearest integer to log expression.",
+  a: 19,
+  hint: "Use sine-cosine product identities.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "If 2a−b, a−2b, a+b are distinct squares find smallest b.",
+  a: 21,
+  hint: "Express in terms of squares and minimize.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Evaluate double sum with parity conditions.",
+  a: 55,
+  hint: "Pair terms carefully.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Triangles with equal angles and given sides. Find AC+DF.",
+  a: 30,
+  hint: "Use cosine rule.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "If 4abc=(a+3)(b+3)(c+3) find a+b+c.",
+  a: 16,
+  hint: "Test small integers ≥4.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Sum 6+66+666+… up to 100 digits. Count number of 7s.",
+  a: 33,
+  hint: "Write as geometric expression.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Find positive integers whose digit product equals quadratic expression. Find sum.",
+  a: 17,
+  hint: "Digits limit product.",
+  difficulty: "Moderate",
+  video: ""
+},
+{
+  q: "Area of triangle ABC if centroid triangle area is 7.",
+  a: 63,
+  hint: "Centroid triangle has 1/9 area.",
+  difficulty: "Moderate",
+  video: ""
+},
+
+{
+  q: "Partition {1…20} into subsets with equal sum k. Count good k.",
+  a: 6,
+  hint: "Total sum is 210.",
+  difficulty: "Hard",
+  video: ""
+},
+{
+  q: "Find largest n satisfying inequality involving symmetric fractions.",
+  a: 14,
+  hint: "Apply Cauchy.",
+  difficulty: "Hard",
+  video: ""
+},
+{
+  q: "Number of non-similar integer angle triangles divided by 100.",
+  a: 27,
+  hint: "Count integer partitions of 180.",
+  difficulty: "Hard",
+  video: ""
+},
+{
+  q: "Smallest number leaving specified remainders mod 11,13,15. Find digit square sum.",
+  a: 81,
+  hint: "Use CRT.",
+  difficulty: "Hard",
+  video: ""
+},
+{
+  q: "Ways to choose 60 squares from 11×11 board with no adjacent.",
+  a: 62,
+  hint: "Checkerboard coloring.",
+  difficulty: "Hard",
+  video: ""
+},
+{
+  q: "Color 4×4 grid with red/blue so each row and column has two of each.",
+  a: 90,
+  hint: "Fix first row then count.",
+  difficulty: "Hard",
+  video: ""
+},
+{
+  q: "Distribute 8 distinct chocolates among 3 children with distinct counts. Find digit sum.",
+  a: 24,
+  hint: "Cases 1-2-5 and 1-3-4.",
+  difficulty: "Hard",
+  video: ""
+},
+{
+  q: "Angle chasing with incenters of ABD and ACD. Find angle.",
+  a: 30,
+  hint: "Use angle bisector properties.",
+  difficulty: "Hard",
+  video: ""
+},
+{
+  q: "Polynomial with nonnegative coefficients satisfies P(1)=4 and P(5)=136. Find P(3).",
+  a: 34,
+  hint: "Try small coefficient combinations.",
+  difficulty: "Hard",
+  video: ""
+},
+    ];
+
+    let currentIndex = 0;
+    let state = {
+      currentIndex: 0,
+      answers: Array(questions.length).fill(""),
+      checked: Array(questions.length).fill(false),
+      correct: Array(questions.length).fill(false),
+      feedbackShown: Array(questions.length).fill(""),
+      hintOpened: Array(questions.length).fill(false),
+      solutionOpened: Array(questions.length).fill(false),
+      reviewMarked: Array(questions.length).fill(false)
+    };
+
+    const els = {
+      progressLabel: document.getElementById("progress-label"),
+      statusLabel: document.getElementById("status-label"),
+      progressFill: document.getElementById("progress-fill"),
+      questionNumber: document.getElementById("question-number"),
+      questionDifficulty: document.getElementById("question-difficulty"),
+      difficultyBannerText: document.getElementById("difficulty-banner-text"),
+      reviewBtn: document.getElementById("review-btn"),
+      questionText: document.getElementById("question-text"),
+      answerInput: document.getElementById("answer-input"),
+      checkBtn: document.getElementById("check-btn"),
+      hintBtn: document.getElementById("hint-btn"),
+      solutionBtn: document.getElementById("solution-btn"),
+      feedback: document.getElementById("feedback"),
+      hintBox: document.getElementById("hint-box"),
+      solutionBox: document.getElementById("solution-box"),
+      prevBtn: document.getElementById("prev-btn"),
+      nextBtn: document.getElementById("next-btn"),
+      finishBtn: document.getElementById("finish-btn"),
+      questionChips: document.getElementById("question-chips"),
+      summaryCard: document.getElementById("summary-card"),
+      summaryTotal: document.getElementById("summary-total"),
+      summaryAnswered: document.getElementById("summary-answered"),
+      summaryCorrect: document.getElementById("summary-correct"),
+      summaryReview: document.getElementById("summary-review"),
+      hideSummaryBtn: document.getElementById("hide-summary-btn"),
+      resetBtn: document.getElementById("reset-btn")
+    };
+
+    function getDifficulty(index) {
+      return questions[index].difficulty;
+    }
+
+    function applyDifficultyTheme(index) {
+      const difficulty = getDifficulty(index);
+      document.body.classList.remove("easy-mode", "moderate-mode", "hard-mode");
+
+      if (difficulty === "Easy") {
+        document.body.classList.add("easy-mode");
+      } else if (difficulty === "Moderate") {
+        document.body.classList.add("moderate-mode");
+      } else {
+        document.body.classList.add("hard-mode");
+      }
+
+      els.questionDifficulty.textContent = difficulty;
+      els.difficultyBannerText.textContent = `Current Section: ${difficulty}`;
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        if (
+          parsed &&
+          Array.isArray(parsed.answers) &&
+          parsed.answers.length === questions.length
+        ) {
+          state = parsed;
+          currentIndex = Number.isInteger(state.currentIndex) ? state.currentIndex : 0;
+          if (currentIndex < 0 || currentIndex >= questions.length) currentIndex = 0;
+        }
+      } catch (e) {
+        console.error("Could not load saved progress:", e);
+      }
+    }
+
+    function countAnswered() {
+      return state.answers.filter(v => String(v).trim() !== "").length;
+    }
+
+    function countCorrect() {
+      return state.correct.filter(Boolean).length;
+    }
+
+    function countReview() {
+      return state.reviewMarked.filter(Boolean).length;
+    }
+
+    function setFeedback(type, text) {
+      els.feedback.className = "feedback";
+      if (!type || !text) {
+        els.feedback.textContent = "";
+        els.feedback.style.display = "none";
+        return;
+      }
+      els.feedback.textContent = text;
+      els.feedback.classList.add(type);
+      els.feedback.style.display = "block";
+    }
+
+    function renderProgress() {
+      const answered = countAnswered();
+      const correct = countCorrect();
+      const review = countReview();
+
+      els.progressLabel.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
+      els.statusLabel.textContent = `${answered} answered · ${correct} correct · ${review} marked for review`;
+      els.progressFill.style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+
+      els.questionNumber.textContent = `Question ${currentIndex + 1}`;
+      els.questionText.textContent = q.q;
+      els.answerInput.value = state.answers[currentIndex];
+      els.answerInput.focus();
+
+      els.reviewBtn.classList.toggle("active", state.reviewMarked[currentIndex]);
+      els.reviewBtn.textContent = state.reviewMarked[currentIndex]
+        ? "★ Marked for review"
+        : "☆ Mark for review";
+
+      const feedbackType = state.feedbackShown[currentIndex];
+      if (feedbackType === "success") {
+        setFeedback("success", "✅ Correct — nice work.");
+      } else if (feedbackType === "error") {
+        setFeedback("error", "❌ Not quite. Try once more, or open the hint.");
+      } else {
+        setFeedback("", "");
+      }
+
+      els.hintBox.textContent = `Hint: ${q.hint}`;
+      els.hintBox.classList.toggle("visible", state.hintOpened[currentIndex]);
+      els.hintBtn.textContent = state.hintOpened[currentIndex] ? "Hide Hint" : "Show Hint";
+
+      els.solutionBox.textContent = `Solution: ${q.a}`;
+      els.solutionBox.classList.toggle("visible", state.solutionOpened[currentIndex]);
+      els.solutionBtn.textContent = state.solutionOpened[currentIndex] ? "Hide Solution" : "Show Solution";
+
+      els.prevBtn.disabled = currentIndex === 0;
+      els.nextBtn.disabled = currentIndex === questions.length - 1;
+
+      applyDifficultyTheme(currentIndex);
+      renderProgress();
+      renderOverview();
+      saveState();
+    }
+
+    function renderOverview() {
+      els.questionChips.innerHTML = "";
+
+      questions.forEach((q, i) => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+
+        if (state.reviewMarked[i]) chip.classList.add("review");
+        else if (state.checked[i] && state.correct[i]) chip.classList.add("correct");
+        else if (state.checked[i] && !state.correct[i]) chip.classList.add("incorrect");
+        else chip.classList.add("unanswered");
+
+        if (i === currentIndex) chip.classList.add("active");
+
+        const button = document.createElement("button");
+        button.type = "button";
+
+        const label =
+          q.difficulty === "Easy" ? "E" :
+          q.difficulty === "Moderate" ? "M" : "H";
+
+        button.textContent = `Q${i + 1} · ${label}`;
+        button.addEventListener("click", () => {
+          currentIndex = i;
+          state.currentIndex = currentIndex;
+          renderQuestion();
+        });
+
+        chip.appendChild(button);
+        els.questionChips.appendChild(chip);
+      });
+    }
+
+    function checkAnswer() {
+      const raw = els.answerInput.value.trim();
+
+      if (raw === "") {
+        setFeedback("error", "Please enter a non-negative integer less than 100.");
+        return;
+      }
+
+      const val = Number(raw);
+
+      if (!Number.isInteger(val) || val < 0 || val >= 100) {
+        setFeedback("error", "Please enter a non-negative integer less than 100.");
+        return;
+      }
+
+      state.answers[currentIndex] = String(val);
+      state.checked[currentIndex] = true;
+
+      if (val === questions[currentIndex].a) {
+        state.correct[currentIndex] = true;
+        state.feedbackShown[currentIndex] = "success";
+        setFeedback("success", "✅ Correct — nice work.");
+      } else {
+        state.correct[currentIndex] = false;
+        state.feedbackShown[currentIndex] = "error";
+        setFeedback("error", "❌ Not quite. Try once more, or open the hint.");
+      }
+
+      saveState();
+      renderProgress();
+      renderOverview();
+    }
+
+    function toggleHint() {
+      state.hintOpened[currentIndex] = !state.hintOpened[currentIndex];
+      renderQuestion();
+    }
+
+    function toggleSolution() {
+      state.solutionOpened[currentIndex] = !state.solutionOpened[currentIndex];
+      renderQuestion();
+    }
+
+    function toggleReview() {
+      state.reviewMarked[currentIndex] = !state.reviewMarked[currentIndex];
+      renderQuestion();
+    }
+
+    function goPrev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        state.currentIndex = currentIndex;
+        renderQuestion();
+      }
+    }
+
+    function goNext() {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        state.currentIndex = currentIndex;
+        renderQuestion();
+      }
+    }
+
+    function showSummary() {
+      els.summaryTotal.textContent = questions.length;
+      els.summaryAnswered.textContent = countAnswered();
+      els.summaryCorrect.textContent = countCorrect();
+      els.summaryReview.textContent = countReview();
+      els.summaryCard.classList.add("visible");
+      els.summaryCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function hideSummary() {
+      els.summaryCard.classList.remove("visible");
+    }
+
+    function resetProgress() {
+      const confirmed = confirm("Reset all saved progress for this paper?");
+      if (!confirmed) return;
+
+      state = {
+        currentIndex: 0,
+        answers: Array(questions.length).fill(""),
+        checked: Array(questions.length).fill(false),
+        correct: Array(questions.length).fill(false),
+        feedbackShown: Array(questions.length).fill(""),
+        hintOpened: Array(questions.length).fill(false),
+        solutionOpened: Array(questions.length).fill(false),
+        reviewMarked: Array(questions.length).fill(false)
+      };
+
+      currentIndex = 0;
+      saveState();
+      hideSummary();
+      renderQuestion();
+    }
+
+    els.checkBtn.addEventListener("click", checkAnswer);
+    els.hintBtn.addEventListener("click", toggleHint);
+    els.solutionBtn.addEventListener("click", toggleSolution);
+    els.reviewBtn.addEventListener("click", toggleReview);
+    els.prevBtn.addEventListener("click", goPrev);
+    els.nextBtn.addEventListener("click", goNext);
+    els.finishBtn.addEventListener("click", showSummary);
+    els.hideSummaryBtn.addEventListener("click", hideSummary);
+    els.resetBtn.addEventListener("click", resetProgress);
+
+    els.answerInput.addEventListener("input", () => {
+      state.answers[currentIndex] = els.answerInput.value;
+      state.currentIndex = currentIndex;
+      saveState();
+    });
+
+    els.answerInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        checkAnswer();
+      }
+    });
+
+    loadState();
+    renderQuestion();
+  </script>
+</body>
+</html>
