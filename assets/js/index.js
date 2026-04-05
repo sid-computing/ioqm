@@ -1,13 +1,33 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const links = document.querySelectorAll(".choice-btn, .difficulty-btn, .mini-link, .yt-link");
+const yearSelect = document.getElementById("year-select");
+const difficultySelect = document.getElementById("difficulty-select");
+const yearEnterBtn = document.getElementById("year-enter-btn");
+const difficultyEnterBtn = document.getElementById("difficulty-enter-btn");
 
-  links.forEach((link) => {
-    link.addEventListener("mouseenter", () => {
-      link.style.transform = "translateY(-2px)";
-    });
+function goToSelected(selectElement) {
+  const value = selectElement.value;
+  if (!value) {
+    selectElement.focus();
+    return;
+  }
+  window.location.href = value;
+}
 
-    link.addEventListener("mouseleave", () => {
-      link.style.transform = "";
-    });
-  });
+yearEnterBtn?.addEventListener("click", () => {
+  goToSelected(yearSelect);
+});
+
+difficultyEnterBtn?.addEventListener("click", () => {
+  goToSelected(difficultySelect);
+});
+
+yearSelect?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    goToSelected(yearSelect);
+  }
+});
+
+difficultySelect?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    goToSelected(difficultySelect);
+  }
 });
