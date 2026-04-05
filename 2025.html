@@ -622,66 +622,186 @@
     const STORAGE_KEY = "ioqm_2025_mixed_progress_v1";
 
     const questions = [
-      {
-        q: "Consider a fraction a/b ≠ 3/4, where a, b are positive integers with gcd(a, b) = 1 and b ≤ 15. If this fraction is chosen closest to 3/4 amongst all such fractions, then what is the value of a + b?.",
-        a: 61,
-        hint: "Look at fractions with denominator at most 15 that are nearest to 3/4, and compare the distance carefully.",
-        difficulty: "Easy"
-      },
-      {
-        q: "Consider five-digit positive integers of the form abcab that are divisible by the two digit number ab but not divisible by 13. What is the largest possible sum of the digits of such a number?",
-        a: 33,
-        hint: "Treat ab as a 2-digit number and use divisibility on abcab written in expanded form.",
-        difficulty: "Easy"
-      },
-      {
-        q: "Three sides of a quadrilateral are a = 4√3, b = 9 and c = √3. The sides a and b enclose an angle of 30°, and the sides b and c enclose an angle of 90°. If the acute angle between the diagonals is x°, what is the value of x?",
-        a: 60,
-        hint: "Place the quadrilateral on coordinates and compute the slopes or direction vectors of the diagonals.",
-        difficulty: "Easy"
-      },
-      {
-        q: "How many isosceles integer-sided triangles are there with perimeter 23?",
-        a: 6,
-        hint: "Write the sides as a, a, b with 2a + b = 23, then use the triangle inequality.",
-        difficulty: "Easy"
-      },
-      {
-        q: "How many 3-digit numbers abc in base 10 are there with a ≠ 0 and c = a + b?",
-        a: 45,
-        hint: "Since c is a digit, a + b must be at most 9. Count valid pairs (a, b).",
-        difficulty: "Easy"
-      },
-      {
-        q: "The age of a person in 2025 is a perfect square. His age was also a perfect square in 2012. His age will be a perfect cube m years after 2025. Determine the smallest value of m.",
-        a: 15,
-        hint: "The ages in 2012 and 2025 differ by 13. Find perfect squares differing by 13, then move forward to the next perfect cube.",
-        difficulty: "Moderate"
-      },
-      {
-        q: "The sum of two real numbers is a positive integer n and the sum of their squares is n + 1012. Find the maximum possible value of n.",
-        a: 46,
-        hint: "If x + y = n, then x² + y² is minimized when x = y = n/2. Use that inequality.",
-        difficulty: "Moderate"
-      },
-      {
-        q: "A quadrilateral has four vertices A, B, C, D. We colour each vertex red, blue, green, or yellow so that every side of the quadrilateral and the diagonal AC have endpoints of different colours. In how many ways can this be done?",
-        a: 48,
-        hint: "Choose a colour for A first. Then C must differ from A, and B and D must avoid the colours at their adjacent endpoints.",
-        difficulty: "Moderate"
-      },
-      {
-        q: "Four sides and a diagonal of a quadrilateral are of lengths 10, 20, 28, 50, 75, not necessarily in that order. Which among them is the only possible length of the diagonal?",
-        a: 28,
-        hint: "A diagonal splits the quadrilateral into two triangles. Test possible diagonal choices using triangle inequalities.",
-        difficulty: "Hard"
-      },
-      {
-        q: "The height and base radius of a closed right circular cylinder are positive integers and its total surface area is numerically equal to its volume. If its volume is kπ where k is a positive integer, what is the smallest possible value of k?",
-        a: 54,
-        hint: "Set πr²h = 2πr² + 2πrh, simplify, and search positive integer solutions systematically.",
-        difficulty: "Hard"
-      }
+{
+  q: "If 60% of a number x is 40, then what is x% of 60?",
+  a: 40,
+  hint: "First find x from 0.6x = 40, then compute x% of 60.",
+  difficulty: "Easy"
+},
+{
+  q: "Find the number of positive integers n less than or equal to 100, which are divisible by 3 but are not divisible by 2.",
+  a: 17,
+  hint: "Count multiples of 3 up to 100, then remove those divisible by 6.",
+  difficulty: "Easy"
+},
+{
+  q: "The area of an integer-sided rectangle is 20. What is the minimum possible value of its perimeter?",
+  a: 18,
+  hint: "List factor pairs of 20 and compare the perimeters.",
+  difficulty: "Easy"
+},
+{
+  q: "How many isosceles integer-sided triangles are there with perimeter 23?",
+  a: 6,
+  hint: "Let sides be (a,a,b) with 2a+b=23 and apply triangle inequality.",
+  difficulty: "Easy"
+},
+{
+  q: "How many 3-digit numbers abc in base 10 are there with a ≠ 0 and c = a + b?",
+  a: 45,
+  hint: "Since c is a digit, a+b ≤ 9. Count valid (a,b).",
+  difficulty: "Easy"
+},
+{
+  q: "The age of a person in 2025 is a perfect square. His age was also a perfect square in 2012. His age will be a perfect cube m years after 2025. Determine the smallest value of m.",
+  a: 15,
+  hint: "Find perfect squares differing by 13, then find next perfect cube.",
+  difficulty: "Easy"
+},
+{
+  q: "The sum of two real numbers is a positive integer n and the sum of their squares is n + 1012. Find the maximum possible value of n.",
+  a: 46,
+  hint: "x²+y² is minimized when x=y=n/2.",
+  difficulty: "Easy"
+},
+{
+  q: "A quadrilateral has four vertices A, B, C, D. We colour each vertex red, blue, green, or yellow so that every side and diagonal AC have endpoints of different colours. In how many ways can this be done?",
+  a: 48,
+  hint: "Choose A first, then C, then B and D with restrictions.",
+  difficulty: "Easy"
+},
+{
+  q: "Four sides and a diagonal of a quadrilateral are of lengths 10, 20, 28, 50, 75. Which is the only possible diagonal?",
+  a: 28,
+  hint: "A diagonal forms two triangles. Test triangle inequality.",
+  difficulty: "Easy"
+},
+{
+  q: "The height and radius of a closed cylinder are positive integers and its total surface area equals its volume. If volume is kπ, find the smallest k.",
+  a: 54,
+  hint: "Set πr²h = 2πr² + 2πrh and simplify.",
+  difficulty: "Easy"
+},
+{
+  q: "Consider a fraction a/b ≠ 3/4, where a, b are positive integers with gcd(a, b) = 1 and b ≤ 15. If this fraction is chosen closest to 3/4 amongst all such fractions, then what is the value of a + b?",
+  a: 61,
+  hint: "Check fractions with denominator ≤ 15 near 3/4.",
+  difficulty: "Moderate"
+},
+{
+  q: "Consider five-digit positive integers of the form abcab that are divisible by the two digit number ab but not divisible by 13. What is the largest possible sum of the digits?",
+  a: 33,
+  hint: "Write abcab as 10010a + 1010b + 100c.",
+  difficulty: "Moderate"
+},
+{
+  q: "Three sides of a quadrilateral are a = 4√3, b = 9 and c = √3. The sides a and b enclose 30°, and b and c enclose 90°. If the acute angle between diagonals is x°, find x.",
+  a: 60,
+  hint: "Use coordinate geometry or vectors.",
+  difficulty: "Moderate"
+},
+{
+  q: "A function f satisfies f(mn+1)=f(m)f(n)-f(n)-m+2 and f(0)=1. Find the largest N such that sum of f(k) from k=1 to N is less than 100.",
+  a: 13,
+  hint: "Try small values to detect a pattern in f(n).",
+  difficulty: "Moderate"
+},
+{
+  q: "Six coupons numbered 1 to 6 are placed into six envelopes, with (1,2), (3,4), (5,6) each going together into different envelopes. How many ways if no coupon goes into matching envelope?",
+  a: 48,
+  hint: "First choose envelopes, then arrange avoiding matches.",
+  difficulty: "Moderate"
+},
+{
+  q: "Let f(x), g(x) be quadratic polynomials such that f(-2)/g(-2)=4 and f(3)/g(3)=4. Given g(5)=2, f(7)=12, g(7)=-6, find f(5).",
+  a: 8,
+  hint: "Use that f(x)-4g(x) has roots at -2 and 3.",
+  difficulty: "Moderate"
+},
+{
+  q: "MTAI is a parallelogram of area 40/41 with MI = 1/MT. If the least possible diagonal MA has square d² = a/b, find |a-b|.",
+  a: 39,
+  hint: "Use area relation and parallelogram diagonal formula.",
+  difficulty: "Moderate"
+},
+{
+  q: "Let N be the number of permutations of digits of 223334444 having at least one 3 to the right of the rightmost 4. Find remainder when N is divided by 100.",
+  a: 52,
+  hint: "Count total permutations minus those with all 3s before 4s.",
+  difficulty: "Moderate"
+},
+{
+  q: "In right triangle ABC with AB=1, BC=2, a square DEFG is formed with D,E on BC, F on AC and G on circle centered at A through B. If area is m/n, find m+n.",
+  a: 13,
+  hint: "Place triangle on coordinate axes.",
+  difficulty: "Moderate"
+},
+{
+  q: "Let f(n) be remainder when n^n is divided by 7. Find smallest T such that f(n+T)=f(n) for all n.",
+  a: 42,
+  hint: "Use periodicity mod 7 and Fermat cycles.",
+  difficulty: "Moderate"
+},
+{
+  q: "For some real numbers m, n and a positive integer a, the list (a+1)n², m², a(n+1)² consists of three consecutive integers in increasing order. What is the largest possible value of m²?",
+  a: 49,
+  hint: "Let the three integers be k, k+1, k+2 and form equations.",
+  difficulty: "Hard"
+},
+{
+  q: "There are m blue marbles and n red marbles. Players alternate picking any marble. Armaan starts and whoever picks the last red marble wins. For how many (m,n) with 1 ≤ m,n ≤ 11 can Armaan force a win?",
+  a: 66,
+  hint: "Game depends only on parity and number of red marbles.",
+  difficulty: "Hard"
+},
+{
+  q: "Let ABCD be a rectangle with M on AB and N on BC. Given MC = CD, MD = MN and C,D,M,N are concyclic. If (AB/BC)² = m/n, find m+n.",
+  a: 41,
+  hint: "Use coordinates and circle condition.",
+  difficulty: "Hard"
+},
+{
+  q: "Let P(x)=x^2025 and Q(x)=x⁴+x³+2x²+x+1. If R(x) is remainder when P(x) is divided by Q(x), find R(3).",
+  a: 79,
+  hint: "Use modular reduction of powers using Q(x)=0.",
+  difficulty: "Hard"
+},
+{
+  q: "For how many n in {1,...,37} can numbers 1 to 2n be paired so that product of sums of pairs is a perfect square?",
+  a: 18,
+  hint: "Look at parity and factor structure.",
+  difficulty: "Hard"
+},
+{
+  q: "A sequence has strictly increasing consecutive 4-term averages but strictly decreasing consecutive 7-term averages. What is maximum possible length?",
+  a: 16,
+  hint: "Translate conditions into inequalities.",
+  difficulty: "Hard"
+},
+{
+  q: "Find number of ordered triples (a,b,c) with 1 ≤ a,b,c ≤ 50 satisfying (lcm(a,c)+lcm(b,c))/(a+b)=26c/27.",
+  a: 50,
+  hint: "Simplify using divisibility and cases.",
+  difficulty: "Hard"
+},
+{
+  q: "Let a be a positive integer not a square. For non-negative x,y: √x − √(x+a) = √(a−y). Find largest possible a < 100.",
+  a: 96,
+  hint: "Square carefully and look for integer constraints.",
+  difficulty: "Hard"
+},
+{
+  q: "A regular polygon with n ≥ 5 vertices is colourful if vertices can be coloured with ≤6 colours so any 5 consecutive are different. Find largest n that is not colourful.",
+  a: 30,
+  hint: "Think about periodic coloring patterns.",
+  difficulty: "Hard"
+},
+{
+  q: "Let S be circle radius 10. Two circles S1,S2 touch S internally and intersect at A,B with ∠OAB=90°. Find sum of their radii.",
+  a: 20,
+  hint: "Use right angle and power of a point geometry.",
+  difficulty: "Hard"
+},
     ];
 
     let currentIndex = 0;
