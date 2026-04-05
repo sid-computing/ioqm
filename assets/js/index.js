@@ -1,89 +1,66 @@
-(() => {
-  // Change this if your paper pages live elsewhere.
-  // Example: "" (same folder) or "papers/" etc.
-  const PAPER_BASE_PATH = "past-papers/";
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('paper-form');
+  const yearSelect = document.getElementById('paper-year');
+  const levelSelect = document.getElementById('paper-level');
+  const startBtn = document.getElementById('start-btn');
 
-  // Change this range to match what you actually host.
-  // Keeping it small is more student-friendly than showing years that 404.
-  const FIRST_YEAR = 2018;
-  const LAST_YEAR = new Date().getFullYear();
+  // Mutual Exclusivity Logic [4]
+  yearSelect.addEventListener('change', () => {
+    if (yearSelect.value) levelSelect.value = "";
+  });
 
-  const continueSection = document.getElementById("continue");
-  const continueText = document.getElementById("continue-text");
-  const continueLink = document.getElementById("continue-link");
+  levelSelect.addEventListener('change', () => {
+    if (levelSelect.value) yearSelect.value = "";
+  });
 
-  const form = document.getElementById("paper-form");
-  const yearSelect = document.getElementById("paper-year");
-  const levelSelect = document.getElementById("paper-level");
-
-  function safeParseJSON(value) {
-    try { return JSON.parse(value); } catch { return null; }
+  // Ripple Effect Implementation [3]
+  function createRipple(event) {
+    const button = event.currentTarget;
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+    circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+    circle.classList.add("ripple");
+    const ripple = button.getElementsByClassName("ripple");
+    if (ripple) ripple.remove();
+    button.appendChild(circle);
   }
 
-  function formatRelativeTime(ms) {
-    const diff = Date.now() - ms;
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "just now";
-    if (mins < 60) return `${mins} min ago`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs} hour${hrs === 1 ? "" : "s"} ago`;
-    const days = Math.floor(hrs / 24);
-    return `${days} day${days === 1 ? "" : "s"} ago`;
-  }
+  startBtn.addEventListener('click', createRipple);
 
-  function populateYears() {
-    // Newest first
-    for (let y = LAST_YEAR; y >= FIRST_YEAR; y--) {
-      const opt = document.createElement("option");
-      opt.value = String(y);
-      opt.textContent = String(y);
-      yearSelect.appendChild(opt);
+  // Form Submission & Redirection [5, 6]
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (yearSelect.value) {
+      celebrate();
+      setTimeout(() => window.location.href = `year.html?value=${yearSelect.value}`, 800);
+    } else if (levelSelect.value) {
+      celebrate();
+      setTimeout(() => window.location.href = `difficulty.html?value=${levelSelect.value}`, 800);
+    } else {
+      // Error Feedback
+      form.parentElement.classList.add('shake');
+      setTimeout(() => form.parentElement.classList.remove('shake'), 400);
     }
-  }
+  });
 
-  function setupContinueCard() {
-    const raw = localStorage.getItem("ioqm:lastPage");
-    const data = safeParseJSON(raw);
-
-    if (!data || !data.path) return;
-
-    // Avoid showing "continue" to the homepage itself
-    const path = String(data.path);
-    const title = String(data.title || "Continue");
-    const last = Number(data.lastVisited || 0);
-
-    const isHome =
-      path === "/" ||
-      path.endsWith("/index.html") ||
-      path === "index.html";
-
-    if (isHome) return;
-
-    continueLink.href = path;
-
-    const when = last ? formatRelativeTime(last) : "recently";
-    continueText.textContent = `${title} · last visited ${when}`;
-
-    continueSection.hidden = false;
-  }
-
-  function setupQuickStart() {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const year = yearSelect.value;
-      const level = levelSelect.value;
-
-      if (!year || !level) return;
-
-      // Expected naming pattern: past-papers/2025_easy.html
-      const url = `${PAPER_BASE_PATH}${year}_${level}.html`;
-      window.location.href = url;
+  // Fun Success Feedback
+  function celebrate() {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#3c8ddc', '#ffffff', '#ffd700']
     });
   }
 
-  // Init
-  populateYears();
-  setupContinueCard();
-  setupQuickStart();
-})();
+  // Handle "Enter" Key Globally on Form [6]
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      startBtn.click();
+    }
+  });
+});
