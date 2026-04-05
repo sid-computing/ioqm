@@ -1,3 +1,4 @@
+// index.html
 <!doctype html>
 <html lang="en-GB">
 <head>
@@ -5,27 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0b1220" />
-  <meta name="description" content="IOQM practice hub: past papers, cut-offs, practice sets, and state rankings — built for students." />
-
   <title>IOQM - Home</title>
-
   <link rel="stylesheet" href="assets/css/main.css" />
-  <!-- Optional: add a favicon later -->
-  <!-- <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" /> -->
-
-  <script defer src="assets/js/index.js"></script>
+  <script src="[https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js](https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js)"></script>
+  <script src="assets/js/index.js"></script>
 </head>
-
 <body>
-  <a class="skip-link" href="#main">Skip to main content</a>
-
-  <header class="site-header">
+  <div id="math-bg"></div> <header class="site-header">
     <div class="container header-row">
       <a class="brand" href="index.html" aria-label="IOQM Home">
         <span class="brand-mark">IOQM</span>
         <span class="brand-sub">Indian Olympiad Qualifier in Mathematics</span>
       </a>
-
       <nav class="top-nav" aria-label="Primary">
         <a class="nav-link" href="past-papers.html">Past papers</a>
         <a class="nav-link" href="practice.html">Practise</a>
@@ -36,100 +28,194 @@
   </header>
 
   <main id="main" class="container">
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero">
       <h1 id="hero-title">Practise for IOQM</h1>
-      <p class="hero-lede">
-        Past papers, cut-offs, practice sets, and rankings — designed to be fast, calm, and mobile-friendly.
-      </p>
-      <p class="hero-note">
-        Unofficial student resource. Always verify official dates/rules from official organisers.
-      </p>
+      <p class="hero-lede">Fast, calm, and mathematically immersive.</p>
     </section>
 
-    <!-- Continue card appears only if remember-last-page is enabled across the site -->
-    <section class="continue" id="continue" hidden aria-label="Continue where you left off">
-      <div class="card card-continue">
-        <div>
-          <h2 class="card-title">Continue where you left off</h2>
-          <p class="card-text" id="continue-text">Resume your last page.</p>
-        </div>
-        <a class="btn btn-primary" id="continue-link" href="past-papers.html">Continue</a>
-      </div>
-    </section>
-
-    <section class="grid" aria-label="Quick start">
-      <article class="card card-primary">
+    <section class="grid">
+      <article class="card card-primary interactive-card" id="practice-selector">
         <div class="card-head">
-          <h2 class="card-title">Start a past paper</h2>
-          <p class="card-text">
-            Choose a year and level. If you haven’t added year-level pages yet, use the Past papers page.
-          </p>
+          <h2 class="card-title">Choose Your Path</h2>
+          <p class="card-text">Select <strong>either</strong> a Year or a Difficulty to begin.</p>
         </div>
 
         <form class="paper-form" id="paper-form">
-          <label class="field">
-            <span class="field-label">Year</span>
-            <select class="field-control" id="paper-year" name="year" required>
-              <!-- Filled by JS (you can also hardcode options) -->
-            </select>
-          </label>
+          <div class="selection-group">
+            <label class="field">
+              <span class="field-label">Option 1: Year</span>
+              <select class="field-control" id="paper-year" name="year">
+                <option value="">-- Choose Year --</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+              </select>
+            </label>
 
-          <label class="field">
-            <span class="field-label">Level</span>
-            <select class="field-control" id="paper-level" name="level" required>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </label>
+            <div class="separator"><span>OR</span></div>
 
-          <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Start</button>
-            <a class="btn btn-secondary" href="past-papers.html">Browse past papers</a>
+            <label class="field">
+              <span class="field-label">Option 2: Difficulty</span>
+              <select class="field-control" id="paper-level" name="level">
+                <option value="">-- Choose Level --</option>
+                <option value="easy">Σ Easy</option>
+                <option value="medium">Δ Medium</option>
+                <option value="hard">Ω Hard</option>
+              </select>
+            </label>
           </div>
 
-          <p class="form-help" id="paper-help">
-            Tip: this expects pages named like <code>past-papers/2025_easy.html</code>. You can change this path in <code>assets/js/index.js</code>.
-          </p>
+          <div class="form-actions">
+            <button class="btn btn-primary ripple-btn" type="submit" id="start-btn">Start Practice</button>
+          </div>
         </form>
-
-        <noscript>
-          <p class="noscript">
-            JavaScript is disabled — no problem. Use <a href="past-papers.html">Browse past papers</a>.
-          </p>
-        </noscript>
       </article>
 
-      <article class="card">
-        <h2 class="card-title">Practise by topic</h2>
-        <p class="card-text">
-          Build speed and accuracy with targeted sets (number theory, combinatorics, algebra, geometry).
-        </p>
-        <a class="btn btn-secondary" href="practice.html">Go to practice</a>
-      </article>
-
-      <article class="card">
-        <h2 class="card-title">Past cut-offs</h2>
-        <p class="card-text">
-          See historical cut-offs to plan your target score intelligently.
-        </p>
-        <a class="btn btn-secondary" href="cutoff-dashboard.html">View cut-offs</a>
-      </article>
-
-      <article class="card">
-        <h2 class="card-title">State rankings</h2>
-        <p class="card-text">
-          Explore state-wise performance and understand competition patterns.
-        </p>
+      <article class="card interactive-card">
+        <h2 class="card-title">State Rankings</h2>
+        <p class="card-text">Explore state-wise patterns with interactive data visualization.</p>
         <a class="btn btn-secondary" href="ranking.html">Open rankings</a>
       </article>
     </section>
-
-    <footer class="site-footer">
-      <p class="footer-text">
-        Built for students: large tap targets, clear focus styles, and reduced motion support.
-      </p>
-    </footer>
   </main>
 </body>
 </html>
+
+/* assets/css/main.css */
+:root {
+  --bg-color: #0b1220;
+  --accent: #3c8ddc;
+  --card-bg: #161f30;
+  --text: #e2e8f0;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+/* Interactive Cards [1, 2] */
+.interactive-card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+  border: 1px solid #2d3748;
+}
+
+.interactive-card:hover {
+  transform: translateY(-5px) rotateX(2deg);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border-color: var(--accent);
+}
+
+/* Mutually Exclusive Form UI */
+.selection-group { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+.separator { 
+  text-align: center; 
+  font-size: 0.8rem; 
+  color: #718096; 
+  position: relative; 
+}
+.separator::before,.separator::after {
+  content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background: #2d3748;
+}
+.separator::before { left: 0; }
+.separator::after { right: 0; }
+
+.field-control {
+  width: 100%; padding: 0.8rem; background: #0b1220; border: 2px solid #2d3748;
+  color: white; border-radius: 8px; cursor: pointer;
+}
+
+.field-control:focus { border-color: var(--accent); outline: none; }
+
+/* Ripple Effect [3] */
+.ripple-btn { position: relative; overflow: hidden; }
+.ripple {
+  position: absolute; border-radius: 50%; transform: scale(0);
+  animation: ripple 600ms linear; background: rgba(255,255,255,0.3);
+  pointer-events: none;
+}
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+/* Shake Error */
+.shake { animation: shake 0.4s; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+/* assets/js/index.js */
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('paper-form');
+  const yearSelect = document.getElementById('paper-year');
+  const levelSelect = document.getElementById('paper-level');
+  const startBtn = document.getElementById('start-btn');
+
+  // Mutual Exclusivity Logic [4]
+  yearSelect.addEventListener('change', () => {
+    if (yearSelect.value) levelSelect.value = "";
+  });
+
+  levelSelect.addEventListener('change', () => {
+    if (levelSelect.value) yearSelect.value = "";
+  });
+
+  // Ripple Effect Implementation [3]
+  function createRipple(event) {
+    const button = event.currentTarget;
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+    circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+    circle.classList.add("ripple");
+    const ripple = button.getElementsByClassName("ripple");
+    if (ripple) ripple.remove();
+    button.appendChild(circle);
+  }
+
+  startBtn.addEventListener('click', createRipple);
+
+  // Form Submission & Redirection [5, 6]
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (yearSelect.value) {
+      celebrate();
+      setTimeout(() => window.location.href = `year.html?value=${yearSelect.value}`, 800);
+    } else if (levelSelect.value) {
+      celebrate();
+      setTimeout(() => window.location.href = `difficulty.html?value=${levelSelect.value}`, 800);
+    } else {
+      // Error Feedback
+      form.parentElement.classList.add('shake');
+      setTimeout(() => form.parentElement.classList.remove('shake'), 400);
+    }
+  });
+
+  // Fun Success Feedback
+  function celebrate() {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#3c8ddc', '#ffffff', '#ffd700']
+    });
+  }
+
+  // Handle "Enter" Key Globally on Form [6]
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      startBtn.click();
+    }
+  });
+});
