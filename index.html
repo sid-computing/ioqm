@@ -12,10 +12,9 @@
   <script defer src="assets/js/index.js"></script>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="bg-glow glow-1"></div>
-  <div class="bg-glow glow-2"></div>
-  <div class="bg-glow glow-3"></div>
+  <div class="bg-pattern"></div>
+  <div class="bg-accent bg-accent-1"></div>
+  <div class="bg-accent bg-accent-2"></div>
 
   <header class="site-header">
     <div class="container topbar">
@@ -37,40 +36,60 @@
 
   <main class="container main-content">
     <section class="hero-card">
-      <div class="hero-badge">Mathematics • Olympiad • Practice</div>
+      <div class="hero-label">Olympiad Preparation Portal</div>
 
       <p class="made-by">
         Made by <strong>Siddhant</strong>, <strong>Indian Statistical Institute, New Delhi</strong>
       </p>
 
-      <h1>Train for IOQM with a sharper, calmer, more modern interface</h1>
+      <h1>Practise IOQM with clarity, structure, and focus</h1>
 
       <p class="hero-text">
-        Practise year-wise papers, filter by difficulty, and build consistency without the clutter.
-        Designed to feel focused, futuristic, and student-friendly.
+        Explore past papers year-wise, practise by difficulty, and build a steady preparation routine.
+        The interface is designed to feel calm, readable, and professional for serious students.
       </p>
 
-      <div class="hero-math">
-        <span>∑</span>
-        <span>π</span>
-        <span>√</span>
-        <span>∫</span>
-        <span>∞</span>
-        <span>△</span>
+      <div class="hero-tags">
+        <span>Past Papers</span>
+        <span>Difficulty-wise Practice</span>
+        <span>Cut-offs</span>
+        <span>Rankings</span>
       </div>
     </section>
+    <section class="quick-start">
+  <a class="quick-card primary" href="2025_NW.html">
+    <div class="quick-kicker">Start Here</div>
+    <h3>Latest Paper</h3>
+    <p>Open the most recent paper and begin practising immediately.</p>
+    <span class="quick-cta">Go to 2025 NW →</span>
+  </a>
+
+  <a class="quick-card" href="easy.html">
+    <div class="quick-kicker">Build Confidence</div>
+    <h3>Easy Practice</h3>
+    <p>Warm up with easier questions collected across years.</p>
+    <span class="quick-cta">Open Easy →</span>
+  </a>
+
+  <a class="quick-card" href="cutoff-dashboard.html">
+    <div class="quick-kicker">Know the Target</div>
+    <h3>Past Cut-offs</h3>
+    <p>See qualifying trends and realistic benchmark scores.</p>
+    <span class="quick-cta">View Cut-offs →</span>
+  </a>
+</section>
 
     <section class="grid two-col">
       <article class="card">
         <div class="card-header">
           <h2>Past Papers by Year</h2>
-          <p>Select a year first, then press Enter.</p>
+          <p>Choose a year or paper, then press Enter.</p>
         </div>
 
         <div class="chooser-box">
-          <label for="year-select" class="chooser-label">Choose year / paper</label>
+          <label for="year-select" class="chooser-label">Select year / paper</label>
           <select id="year-select" class="chooser-select">
-            <option value="">Select a paper</option>
+            <option value="">Choose a paper</option>
             <option value="2025_NW.html">2025 NW</option>
             <option value="2025.html">2025</option>
             <option value="2024.html">2024</option>
@@ -89,7 +108,7 @@
           </select>
 
           <button class="enter-btn" id="year-enter-btn" type="button">
-            Enter Year Paper
+            Open Paper
           </button>
         </div>
       </article>
@@ -97,20 +116,20 @@
       <article class="card">
         <div class="card-header">
           <h2>Practice by Difficulty</h2>
-          <p>Select a difficulty level, then press Enter.</p>
+          <p>Select a level, then press Enter.</p>
         </div>
 
         <div class="chooser-box">
-          <label for="difficulty-select" class="chooser-label">Choose difficulty</label>
+          <label for="difficulty-select" class="chooser-label">Select difficulty</label>
           <select id="difficulty-select" class="chooser-select">
-            <option value="">Select difficulty</option>
+            <option value="">Choose difficulty</option>
             <option value="easy.html">Easy</option>
             <option value="medium.html">Medium</option>
             <option value="hard.html">Hard</option>
           </select>
 
           <button class="enter-btn" id="difficulty-enter-btn" type="button">
-            Enter Practice Mode
+            Start Practice
           </button>
         </div>
       </article>
@@ -119,19 +138,19 @@
     <section class="grid three-col">
       <article class="mini-card">
         <h3>Past Cut-offs</h3>
-        <p>See earlier qualifying trends and realistic score targets.</p>
+        <p>Check qualifying trends and realistic score benchmarks from earlier years.</p>
         <a class="mini-link" href="cutoff-dashboard.html">Open cut-offs</a>
       </article>
 
       <article class="mini-card">
         <h3>Practice Hub</h3>
-        <p>Go to your wider practice section and revision area.</p>
+        <p>Go to your wider practice section for mixed training and revision.</p>
         <a class="mini-link" href="practice.html">Open practice</a>
       </article>
 
       <article class="mini-card">
         <h3>State Rankings</h3>
-        <p>Explore rankings and state-wise performance data.</p>
+        <p>Explore rankings and state-wise performance data in one place.</p>
         <a class="mini-link" href="ranking.html">Open rankings</a>
       </article>
     </section>
@@ -140,7 +159,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>© 2026 Siddhant, Indian Statistical Institute, New Delhi.</p>
-      <p>This resource is built for student learning, practice, and olympiad preparation.</p>
+      <p>This resource is created for student learning, practice, and olympiad preparation.</p>
       <p>
         YouTube:
         <a
