@@ -1,162 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Futuristic Exam Cutoffs Dashboard</title>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.10.1/tsparticles.min.js"></script>
-<style>
-html, body {
-    margin:0; padding:0; width:100%; height:100%; overflow:hidden;
-    background:#0a0a0a; font-family:Arial; color:#fff;
-}
-#particles-js { position:absolute; width:100%; height:100%; z-index:0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Exam Cutoffs Dashboard</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 
-#content {
-    position:relative; z-index:1; text-align:center; padding-top:40px;
+<style>
+:root {
+    --bg: #0b1220;
+    --bg-soft: #111827;
+    --panel: rgba(17, 24, 39, 0.78);
+    --panel-strong: rgba(15, 23, 42, 0.92);
+    --border: rgba(148, 163, 184, 0.14);
+    --text: #e5eefc;
+    --muted: #94a3b8;
+    --accent: #60a5fa;
+    --accent-2: #a78bfa;
+    --success: #34d399;
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 15% 20%, rgba(96, 165, 250, 0.14), transparent 28%),
+        radial-gradient(circle at 85% 18%, rgba(167, 139, 250, 0.12), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(52, 211, 153, 0.08), transparent 35%),
+        linear-gradient(135deg, #020617 0%, #0b1220 45%, #111827 100%);
+}
+
+body {
+    padding: 32px 18px 50px;
+}
+
+.page {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(96, 165, 250, 0.12);
+    border: 1px solid rgba(96, 165, 250, 0.18);
+    color: #bfdbfe;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    margin-bottom: 16px;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+.subtitle {
+    max-width: 760px;
+    margin: 14px auto 0;
+    color: var(--muted);
+    font-size: 1.02rem;
+    line-height: 1.65;
+}
+
+.dashboard {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(14px);
+    overflow: hidden;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px;
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0));
+}
+
+.control-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.control-card label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #cbd5e1;
 }
 
 select {
-    margin:10px; padding:5px; font-size:16px;
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(15, 23, 42, 0.9);
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+select:focus {
+    border-color: rgba(96, 165, 250, 0.7);
+    transform: translateY(-1px);
+}
+
+.actions {
+    display: flex;
+    align-items: end;
+}
+
+button {
+    width: 100%;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(96, 165, 250, 0.25);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(96, 165, 250, 0.33);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 0;
+}
+
+.sidebar {
+    padding: 24px;
+    border-right: 1px solid var(--border);
+    background: rgba(2, 6, 23, 0.22);
+}
+
+.sidebar h2 {
+    margin: 0 0 14px;
+    font-size: 1.05rem;
+    color: #dbeafe;
+}
+
+.stat-list {
+    display: grid;
+    gap: 14px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.87rem;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.stat-sub {
+    color: #cbd5e1;
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.note {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(96, 165, 250, 0.08);
+    border: 1px solid rgba(96, 165, 250, 0.15);
+    color: #dbeafe;
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.chart-section {
+    padding: 24px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.chart-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.chart-header p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.55;
 }
 
 #graph {
-    width:90%; max-width:1100px; height:600px; margin:auto;
-    background: linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6));
-    border-radius:20px; padding:20px; box-shadow: 0 0 20px #00ffff;
+    width: 100%;
+    height: 560px;
+    border-radius: 20px;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
+        rgba(15, 23, 42, 0.58);
+    border: 1px solid var(--border);
+}
+
+.footer-note {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 980px) {
+    .controls {
+        grid-template-columns: 1fr;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    #graph {
+        height: 460px;
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        padding: 20px 12px 36px;
+    }
+
+    .controls, .sidebar, .chart-section {
+        padding: 18px;
+    }
+
+    #graph {
+        height: 390px;
+    }
 }
 </style>
 </head>
 <body>
+<div class="page">
+    <section class="hero">
+        <div class="badge">IOQM / Exam Analytics</div>
+        <h1>Exam Cutoffs Dashboard</h1>
+        <p class="subtitle">
+            Explore cutoff trends across years and states in a clean, student-friendly format.
+            Select a year to compare states, or select a state to track its trend over time.
+        </p>
+    </section>
 
-<div id="particles-js"></div>
+    <section class="dashboard">
+        <div class="controls">
+            <div class="control-card">
+                <label for="yearSelect">Choose Year</label>
+                <select id="yearSelect">
+                    <option value="">All / None selected</option>
+                </select>
+            </div>
 
-<div id="content">
-    <h1 style="color:#0ff; text-shadow:0 0 20px #0ff;">🚀 Exam Cutoffs Dashboard 🚀</h1>
+            <div class="control-card">
+                <label for="stateSelect">Choose State</label>
+                <select id="stateSelect">
+                    <option value="">All / None selected</option>
+                </select>
+            </div>
 
-    <label>Choose Year:</label>
-    <select id="yearSelect">
-        <option value="">--Select Year--</option>
-    </select>
+            <div class="actions">
+                <button id="resetBtn">Reset Filters</button>
+            </div>
+        </div>
 
-    <label>Choose State:</label>
-    <select id="stateSelect">
-        <option value="">--Select State--</option>
-    </select>
+        <div class="content-grid">
+            <aside class="sidebar">
+                <h2>Quick Insights</h2>
 
-    <div id="graph"></div>
+                <div class="stat-list">
+                    <div class="stat-card">
+                        <div class="stat-label">Current View</div>
+                        <div class="stat-value" id="currentViewValue">2023</div>
+                        <div class="stat-sub" id="currentViewSub">Showing state-wise cutoffs for 2023.</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label">Highest Cutoff</div>
+                        <div class="stat-value" id="highestValue">17</div>
+                        <div class="stat-sub" id="highestSub">Delhi has the highest cutoff in this view.</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label">Average Cutoff</div>
+                        <div class="stat-value" id="averageValue">11.8</div>
+                        <div class="stat-sub" id="averageSub">Average across all visible bars.</div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    Use this section for short interpretation notes later:
+                    for example, “Delhi has consistently stayed above the national benchmark,”
+                    or “2024 saw a large increase compared to 2023.”
+                </div>
+            </aside>
+
+            <div class="chart-section">
+                <div class="chart-header">
+                    <div>
+                        <h2 id="chartTitle">State-wise Cutoff Comparison</h2>
+                        <p id="chartDescription">
+                            Compare cutoffs across regions for a selected year, or compare one state across years.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="graph"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer-note">
+        Built for clear exam analysis — clean visuals, readable labels, and no distracting effects.
+    </div>
 </div>
 
 <script>
-// ---------- Neon Particles Background ----------
-tsParticles.load("particles-js", {
-    particles: {
-        number: { value: 120 },
-        color: { value: ["#00ffff","#ff00ff","#ff0000"] },
-        shape: { type: "circle" },
-        opacity: { value: 0.6, random:true },
-        size: { value: 4, random:true },
-        move: { enable:true, speed:3, direction:"none", outMode:"bounce" },
-        links: { enable:true, distance:150, color:"#00ffff", opacity:0.2, width:1 }
-    },
-    interactivity: {
-        events: { onHover:{ enable:true, mode:"repulse" }, onClick:{ enable:true, mode:"push" } },
-        modes:{ repulse:{ distance:120 }, push:{ quantity:4 } }
-    },
-    background: { color:"#0a0a0a" }
-});
-</script>
-
-<script>
-// ---------- Dynamic Plotly Graph with Neon Glow ----------
-let dataJSON = {
-    "2023": {"Delhi":17,"Rajasthan":12,"Gujarat":10,"Mumbai":10, "Top 10%":10},
-    "2024": {"Delhi":35,"Rajasthan":34,"Gujarat":25,"Mumbai":25, "Top 10%":24},
-    "2025": {"Delhi":37,"Rajasthan":34,"Gujarat":25,"Mumbai":28, "Top 10%":24}
+const dataJSON = {
+    "2023": { "Delhi": 17, "Rajasthan": 12, "Gujarat": 10, "Mumbai": 10, "Top 10%": 10 },
+    "2024": { "Delhi": 35, "Rajasthan": 34, "Gujarat": 25, "Mumbai": 25, "Top 10%": 24 },
+    "2025": { "Delhi": 37, "Rajasthan": 34, "Gujarat": 25, "Mumbai": 28, "Top 10%": 24 }
 };
+
+const yearSelect = document.getElementById("yearSelect");
+const stateSelect = document.getElementById("stateSelect");
+const resetBtn = document.getElementById("resetBtn");
 
 function populateDropdowns() {
     const years = Object.keys(dataJSON);
     const states = Object.keys(dataJSON[years[0]]);
-    
-    const yearSelect = document.getElementById('yearSelect');
-    const stateSelect = document.getElementById('stateSelect');
 
-    years.forEach(y => yearSelect.add(new Option(y, y)));
-    states.forEach(s => stateSelect.add(new Option(s, s)));
+    years.forEach(year => yearSelect.add(new Option(year, year)));
+    states.forEach(state => stateSelect.add(new Option(state, state)));
 
-    yearSelect.onchange = function(){
-        stateSelect.value = ""; // Reset state
+    yearSelect.addEventListener("change", () => {
+        if (yearSelect.value) stateSelect.value = "";
         updateGraph();
-    };
-    stateSelect.onchange = function(){
-        yearSelect.value = ""; // Reset year
+    });
+
+    stateSelect.addEventListener("change", () => {
+        if (stateSelect.value) yearSelect.value = "";
         updateGraph();
-    };
+    });
+
+    resetBtn.addEventListener("click", () => {
+        yearSelect.value = "";
+        stateSelect.value = "";
+        updateGraph();
+    });
+}
+
+function getBarColors(values) {
+    const maxVal = Math.max(...values);
+    const minVal = Math.min(...values);
+
+    return values.map(v => {
+        if (v === maxVal) return "#60a5fa";
+        if (v === minVal) return "#34d399";
+        return "#a78bfa";
+    });
+}
+
+function updateStats(xData, yData, modeLabel) {
+    const maxVal = Math.max(...yData);
+    const avgVal = (yData.reduce((a, b) => a + b, 0) / yData.length).toFixed(1);
+    const maxLabel = xData[yData.indexOf(maxVal)];
+
+    document.getElementById("currentViewValue").textContent = modeLabel;
+    document.getElementById("currentViewSub").textContent =
+        modeLabel.includes("State")
+            ? `Showing year-wise trend for ${modeLabel.replace("State: ", "")}.`
+            : `Showing state-wise cutoffs for ${modeLabel.replace("Year: ", "")}.`;
+
+    document.getElementById("highestValue").textContent = maxVal;
+    document.getElementById("highestSub").textContent = `${maxLabel} has the highest cutoff in this view.`;
+
+    document.getElementById("averageValue").textContent = avgVal;
+    document.getElementById("averageSub").textContent = `Average across ${yData.length} visible data point${yData.length > 1 ? "s" : ""}.`;
 }
 
 function updateGraph() {
-    const selectedYear = document.getElementById('yearSelect').value;
-    const selectedState = document.getElementById('stateSelect').value;
+    const selectedYear = yearSelect.value;
+    const selectedState = stateSelect.value;
 
     const years = Object.keys(dataJSON);
     const states = Object.keys(dataJSON[years[0]]);
 
-    let xData=[], yData=[], title='';
+    let xData = [];
+    let yData = [];
+    let title = "";
+    let description = "";
+    let modeLabel = "";
 
-    if(selectedYear) {
+    if (selectedYear) {
         xData = states;
-        yData = states.map(s=>dataJSON[selectedYear][s]);
-        title = `State vs Cutoff for ${selectedYear}`;
-    } else if(selectedState) {
+        yData = states.map(state => dataJSON[selectedYear][state]);
+        title = `State-wise Cutoff Comparison — ${selectedYear}`;
+        description = `This view compares cutoff values across states for ${selectedYear}.`;
+        modeLabel = `Year: ${selectedYear}`;
+    } else if (selectedState) {
         xData = years;
-        yData = years.map(y=>dataJSON[y][selectedState]);
-        title = `Year vs Cutoff for ${selectedState}`;
+        yData = years.map(year => dataJSON[year][selectedState]);
+        title = `Trend Over Time — ${selectedState}`;
+        description = `This view tracks how the cutoff for ${selectedState} has changed across years.`;
+        modeLabel = `State: ${selectedState}`;
     } else {
         xData = states;
-        yData = states.map(s=>dataJSON[years[0]][s]);
-        title = `State vs Cutoff for ${years[0]}`;
+        yData = states.map(state => dataJSON[years[0]][state]);
+        title = `State-wise Cutoff Comparison — ${years[0]}`;
+        description = `Default view: comparing state-wise cutoffs for ${years[0]}.`;
+        modeLabel = `Year: ${years[0]}`;
     }
 
-    const colors = yData.map(v=>v>=85?'#0ff':v>=80?'#ff0':'#f00');
+    const colors = getBarColors(yData);
 
     const trace = {
-        x:xData,
-        y:yData,
-        type:'bar',
-        marker:{
-            color:colors,
-            line:{ color:'#0ff', width:2 },
-        },
-        text:yData.map(v=>v.toString()),
-        textposition:'auto',
-        hoverinfo:'x+y',
-        hoverlabel:{ bgcolor:"#111", font:{ color:"#0ff", size:14 } },
-        // neon pulse on hover
-        transforms: [
-            {
-                type: 'groupby',
-                groups: xData
+        x: xData,
+        y: yData,
+        type: "bar",
+        text: yData.map(v => String(v)),
+        textposition: "outside",
+        cliponaxis: false,
+        marker: {
+            color: colors,
+            line: {
+                color: "rgba(255,255,255,0.18)",
+                width: 1.4
             }
-        ]
+        },
+        hovertemplate: "<b>%{x}</b><br>Cutoff: %{y}<extra></extra>"
     };
 
     const layout = {
-        title: { text:title, font:{ color:'#0ff', size:24 } },
-        paper_bgcolor:'rgba(0,0,0,0)',
-        plot_bgcolor:'rgba(0,0,0,0)',
-        xaxis:{ title:'X Axis', color:'#0ff', tickfont:{ size:14 } },
-        yaxis:{ title:'Cutoff', range:[0,100], color:'#0ff', tickfont:{ size:14 } },
-        transition:{ duration:1200, easing:'cubic-in-out' },
-        font:{ color:'#0ff' }
+        title: {
+            text: "",
+        },
+        margin: { l: 55, r: 20, t: 30, b: 60 },
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        font: {
+            color: "#e5eefc",
+            size: 14
+        },
+        xaxis: {
+            title: "",
+            tickfont: { size: 13, color: "#cbd5e1" },
+            showgrid: false,
+            zeroline: false
+        },
+        yaxis: {
+            title: "Cutoff",
+            tickfont: { size: 13, color: "#cbd5e1" },
+            gridcolor: "rgba(148,163,184,0.12)",
+            zeroline: false,
+            rangemode: "tozero"
+        },
+        bargap: 0.32,
+        transition: {
+            duration: 450,
+            easing: "cubic-in-out"
+        }
     };
 
-    Plotly.newPlot('graph',[trace],layout,{responsive:true});
+    Plotly.react("graph", [trace], layout, { responsive: true, displayModeBar: false });
+
+    document.getElementById("chartTitle").textContent = title;
+    document.getElementById("chartDescription").textContent = description;
+    updateStats(xData, yData, modeLabel);
 }
 
 populateDropdowns();
 updateGraph();
 </script>
-
 </body>
 </html>
