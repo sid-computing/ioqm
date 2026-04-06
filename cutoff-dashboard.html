@@ -354,11 +354,11 @@ button:active {
                 </div>
 
                 <div class="note">
-                    Files expected in the same folder:
+                    This page reads from <b>cutoffs.json</b> in the same location as this HTML file.
                     <br><br>
-                    <b>tenpercent.csv</b> → columns: <b>Year,Top10Percent</b>
+                    JSON format:
                     <br>
-                    <b>2023.csv</b>, <b>2024.csv</b>, etc. → columns: <b>State,Cutoff</b>
+                    <b>year → Top 10% + state cutoffs</b>
                 </div>
             </aside>
 
@@ -367,19 +367,19 @@ button:active {
                     <div>
                         <h2 id="chartTitle">Loading dashboard...</h2>
                         <p id="chartDescription">
-                            Reading CSV files from the repo.
+                            Reading cutoffs.json
                         </p>
                     </div>
                 </div>
 
                 <div id="graph"></div>
-                <div class="status" id="statusMessage">Loading CSV data...</div>
+                <div class="status" id="statusMessage">Loading JSON data...</div>
             </div>
         </div>
     </section>
 
     <div class="footer-note">
-        Update the CSV files in your repo and push — no code edits needed.
+        Update cutoffs.json and push — no code edits needed.
     </div>
 </div>
 
@@ -391,74 +391,12 @@ const stateSelect = document.getElementById("stateSelect");
 const resetBtn = document.getElementById("resetBtn");
 const statusMessage = document.getElementById("statusMessage");
 
-function parseCSV(text) {
-    const lines = text.trim().split(/\r?\n/).filter(line => line.trim() !== "");
-    if (lines.length < 2) return [];
-
-    const headers = lines[0].split(",").map(h => h.trim());
-    const rows = [];
-
-    for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(",").map(v => v.trim());
-        const row = {};
-        headers.forEach((header, index) => {
-            row[header] = values[index] ?? "";
-        });
-        rows.push(row);
-    }
-
-    return rows;
-}
-
-async function fetchCSV(filename) {
-    const response = await fetch(filename);
+async function loadData() {
+    const response = await fetch("cutoffs.json");
     if (!response.ok) {
-        throw new Error(`Could not load ${filename}`);
+        throw new Error("Could not load cutoffs.json");
     }
-    return await response.text();
-}
-
-async function loadAllData() {
-    statusMessage.textContent = "Loading tenpercent.csv...";
-
-    const tenPercentText = await fetchCSV("tenpercent.csv");
-    const tenPercentRows = parseCSV(tenPercentText);
-
-    const years = tenPercentRows
-        .map(row => String(row.Year).trim())
-        .filter(Boolean)
-        .sort();
-
-    const newData = {};
-
-    for (const row of tenPercentRows) {
-        const year = String(row.Year).trim();
-        const top10 = Number(row.Top10Percent);
-
-        if (!year || Number.isNaN(top10)) continue;
-
-        newData[year] = {
-            "Top 10%": top10
-        };
-    }
-
-    for (const year of years) {
-        statusMessage.textContent = `Loading ${year}.csv...`;
-
-        const cutoffText = await fetchCSV(`${year}.csv`);
-        const cutoffRows = parseCSV(cutoffText);
-
-        cutoffRows.forEach(row => {
-            const state = String(row.State).trim();
-            const cutoff = Number(row.Cutoff);
-
-            if (!state || Number.isNaN(cutoff)) return;
-            newData[year][state] = cutoff;
-        });
-    }
-
-    dataJSON = newData;
-    statusMessage.textContent = `Loaded ${years.length} year(s) successfully.`;
+    dataJSON = await response.json();
 }
 
 function getYears() {
@@ -545,7 +483,14 @@ function updateGraph() {
 
     if (!years.length) {
         document.getElementById("chartTitle").textContent = "No data found";
-        document.getElementById("chartDescription").textContent = "Make sure your CSV files are present in the same folder.";
+        document.getElementById("chartDescription").textContent = "Make sure cutoffs.json exists and is valid.";
+        Plotly.react("graph", [], {
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(0,0,0,0)"
+        }, {
+            responsive: true,
+            displayModeBar: false
+        });
         return;
     }
 
@@ -558,6 +503,7 @@ function updateGraph() {
     let description = "";
     let modeLabel = "";
     let activeYearForTop10 = "";
+    let shapes = [];
 
     if (selectedYear) {
         xData = states.filter(state => dataJSON[selectedYear][state] !== undefined);
@@ -566,6 +512,24 @@ function updateGraph() {
         description = `This view compares cutoff values across states for ${selectedYear}.`;
         modeLabel = `Year: ${selectedYear}`;
         activeYearForTop10 = selectedYear;
+
+        const top10 = dataJSON[selectedYear]["Top 10%"];
+        if (top10 !== undefined) {
+            shapes.push({
+                type: "line",
+                xref: "paper",
+                x0: 0,
+                x1: 1,
+                yref: "y",
+                y0: top10,
+                y1: top10,
+                line: {
+                    color: "rgba(255,255,255,0.45)",
+                    width: 2,
+                    dash: "dash"
+                }
+            });
+        }
     } else if (selectedState) {
         xData = years.filter(year => dataJSON[year][selectedState] !== undefined);
         yData = xData.map(year => dataJSON[year][selectedState]);
@@ -581,6 +545,24 @@ function updateGraph() {
         description = `Default view: comparing state-wise cutoffs for ${defaultYear}.`;
         modeLabel = `Year: ${defaultYear}`;
         activeYearForTop10 = defaultYear;
+
+        const top10 = dataJSON[defaultYear]["Top 10%"];
+        if (top10 !== undefined) {
+            shapes.push({
+                type: "line",
+                xref: "paper",
+                x0: 0,
+                x1: 1,
+                yref: "y",
+                y0: top10,
+                y1: top10,
+                line: {
+                    color: "rgba(255,255,255,0.45)",
+                    width: 2,
+                    dash: "dash"
+                }
+            });
+        }
     }
 
     const trace = {
@@ -624,7 +606,8 @@ function updateGraph() {
         transition: {
             duration: 450,
             easing: "cubic-in-out"
-        }
+        },
+        shapes: shapes
     };
 
     Plotly.react("graph", [trace], layout, {
@@ -660,14 +643,15 @@ resetBtn.addEventListener("click", () => {
 
 async function init() {
     try {
-        await loadAllData();
+        await loadData();
         refreshDropdowns();
         updateGraph();
+        statusMessage.textContent = "Data loaded from cutoffs.json";
     } catch (error) {
         statusMessage.textContent = error.message;
-        document.getElementById("chartTitle").textContent = "Could not load CSV files";
+        document.getElementById("chartTitle").textContent = "Could not load JSON file";
         document.getElementById("chartDescription").textContent =
-            "Keep tenpercent.csv and yearly CSV files in the same folder as this page.";
+            "Keep cutoffs.json in the same location as this page.";
     }
 }
 
