@@ -623,77 +623,185 @@
 
     const questions = [
 {
-  q: "Three parallel lines L1,L2,L3 have distances 3 between consecutive lines. A square ABCD has A on L1, B on L3, C on L2. Find the area of the square.",
-  a: 36,
-  hint: "Use vertical distances and square geometry.",
-  difficulty: "Easy"
-},
-{
-  q: "Numbers 1 to 101 are colored red or blue. Largest blue equals number of blue numbers and smallest red equals half number of red numbers. How many red numbers?",
-  a: 50,
-  hint: "Let number of blue be b and red be r.",
-  difficulty: "Easy"
-},
-
-{
-  q: "Triangles with prime sides in arithmetic progression. For the smallest such triangle find α/L where α is largest angle and L perimeter.",
-  a: 3,
-  hint: "Smallest primes in AP form 3,5,7.",
-  difficulty: "Moderate"
-},
-{
-  q: "Six digit numbers using digits a,b,c (distinct). Given total sum find largest remainder when abc divided by 100.",
-  a: 99,
-  hint: "Use digit contribution symmetry.",
-  difficulty: "Moderate"
-},
-{
-  q: "Parallelogram ABCD with longer side twice shorter. Internal angle bisectors form XYZW with area 10. Find area ABCD.",
-  a: 40,
-  hint: "Angle bisector parallelogram scaling.",
-  difficulty: "Moderate"
-},
-{
-  q: "Given x²+y²=49, y²+yz+z²=36 and x²+√3xz+z²=25. If 2xy+√3yz+zx=p√q find p+q.",
-  a: 10,
-  hint: "Square and combine equations.",
-  difficulty: "Moderate"
-},
-{
-  q: "Number of non-decreasing maps f:{1,2,3}→{1,2,3,4,5}.",
-  a: 35,
-  hint: "Stars and bars.",
-  difficulty: "Moderate"
-},
-{
-  q: "Given nested floor expressions involving √N equal to 4 find digit sum of N.",
-  a: 13,
-  hint: "Work interval by interval.",
-  difficulty: "Moderate"
-},
-{
-  q: "Points defined recursively Pn. Find area of quadrilateral P96,P97,P98,P99.",
-  a: 5,
-  hint: "Transformation is rotation and scaling.",
-  difficulty: "Moderate"
-},
-
-{
-  q: "Polynomial P with integer coefficients satisfies P(√7+√5)=2(√7−√5). Find P(2).",
+  q: "In trapezium ABCD with AB ∥ CD and AB = 3CD, E is midpoint of BD. If area(ABCD) = n×area(CDE), find n.",
   a: 4,
-  hint: "Use conjugates.",
+  hint: "Use area ratios from similar triangles.",
+  difficulty: "Easy"
+},
+{
+  q: "Number N is 503 in base b and 305 in base b+2. Find product of digits of N.",
+  a: 15,
+  hint: "Equate decimal values.",
+  difficulty: "Easy"
+},
+{
+  q: "If Σ(2k+1)/(k²+k)² = 0.9999 find N.",
+  a: 99,
+  hint: "Use telescoping.",
+  difficulty: "Easy"
+},
+{
+  q: "Rectangle ABCD has AB+BC+CD=20 and AE=9 where E midpoint of BC. Find area.",
+  a: 44,
+  hint: "Let sides be x,y.",
+  difficulty: "Easy"
+},
+{
+  q: "Number of integer solutions to ||x|−2020| < 5.",
+  a: 18,
+  hint: "Solve inequality stepwise.",
+  difficulty: "Easy"
+},
+{
+  q: "Least integer to multiply 2⁵·3⁶·4³·5³·6⁷ to make perfect square.",
+  a: 30,
+  hint: "Make all prime exponents even.",
+  difficulty: "Easy"
+},
+{
+  q: "Isosceles triangle with BD and DC given. CE ⟂ AD and DE=11. Find AE.",
+  a: 60,
+  hint: "Use right triangle relations.",
+  difficulty: "Easy"
+},
+{
+  q: "5-digit number k,k+1,k+2,3k,k+3 is a perfect square. Find sum of digits of square root.",
+  a: 13,
+  hint: "Digits must be ≤9.",
+  difficulty: "Easy"
+},
+
+{
+  q: "Triangle ABC with AB=5, AC=4, BC=6. Using angle bisector and parallels find (MN)²=p/q. Find digit sum of |p−q|.",
+  a: 9,
+  hint: "Use similarity.",
+  difficulty: "Moderate"
+},
+{
+  q: "Five scores between 0–100. Largest possible difference between mean and median.",
+  a: 40,
+  hint: "Use extreme scores.",
+  difficulty: "Moderate"
+},
+{
+  q: "Set S of pairs (a,b) where two polynomials share real root. Find |S|.",
+  a: 23,
+  hint: "Solve simultaneous roots.",
+  difficulty: "Moderate"
+},
+{
+  q: "Concentric circles with touching chords. If angle is 75° how many chords before return?",
+  a: 24,
+  hint: "Angle step repeats cycle.",
+  difficulty: "Moderate"
+},
+{
+  q: "Find sum of n where |2ⁿ+5n−65| is perfect square.",
+  a: 14,
+  hint: "Test small n.",
+  difficulty: "Moderate"
+},
+{
+  q: "Write 55×60×65 as product of five distinct integers. Minimize largest.",
+  a: 39,
+  hint: "Balance factors.",
+  difficulty: "Moderate"
+},
+{
+  q: "Three couples sit in 2 rows avoiding adjacency. Number of arrangements?",
+  a: 48,
+  hint: "Arrange with restrictions.",
+  difficulty: "Moderate"
+},
+{
+  q: "Triangle sides x,y satisfy relation with area. Given x=60,y=63 find largest side.",
+  a: 65,
+  hint: "Use Heron.",
+  difficulty: "Moderate"
+},
+{
+  q: "Two-digit numbers with exactly 4 divisors.",
+  a: 32,
+  hint: "Numbers of form pq or p³.",
+  difficulty: "Moderate"
+},
+{
+  q: "Evaluate Σ√(1+1/k²+1/(k+1)²)=a+b/c find a+b.",
+  a: 21,
+  hint: "Simplify under root.",
+  difficulty: "Moderate"
+},
+{
+  q: "Parallelogram with intersection triangles. Area=100. Find maximum triangle area.",
+  a: 25,
+  hint: "Area partitioning.",
+  difficulty: "Moderate"
+},
+{
+  q: "Women build wall joining over time. First worked 5× last. Find hours.",
+  a: 75,
+  hint: "Arithmetic sequence of work times.",
+  difficulty: "Moderate"
+},
+{
+  q: "Money shared proportional to age over years. Find N.",
+  a: 28,
+  hint: "Use ratios over time.",
+  difficulty: "Moderate"
+},
+
+{
+  q: "Triangle with perpendiculars to angle bisectors. Given PQ=7, QR=6, RS=8 find area.",
+  a: 84,
+  hint: "Use geometry relations.",
   difficulty: "Hard"
 },
 {
-  q: "Four married couples sit alternating men and women on circle, no spouses adjacent. Number of ways?",
-  a: 2,
-  hint: "Arrange women first then men.",
+  q: "Given radii of three tangent circles inside triangle find inradius.",
+  a: 20,
+  hint: "Use Descartes relation.",
   difficulty: "Hard"
 },
 {
-  q: "On 12×12 board find least N such that any placement guarantees 7 non-attacking rooks.",
-  a: 73,
-  hint: "Use pigeonhole principle and Erdős–Ko–Rado style bound.",
+  q: "Light at (0,16) and disc casts shadow on x-axis. Length = m√n find m+n.",
+  a: 13,
+  hint: "Use tangents.",
+  difficulty: "Hard"
+},
+{
+  q: "Perfect square rounding function equation. Find N.",
+  a: 10,
+  hint: "Balance nearest squares.",
+  difficulty: "Hard"
+},
+{
+  q: "Color 6 disks with 3 colors with symmetry. Count distinct.",
+  a: 10,
+  hint: "Burnside’s lemma.",
+  difficulty: "Hard"
+},
+{
+  q: "Bug moves from A to B with path length ≤14. Count integer points visited.",
+  a: 81,
+  hint: "Bounding diamond region.",
+  difficulty: "Hard"
+},
+{
+  q: "Good numbers ≤100 expressible as sum of consecutive integers. Count them.",
+  a: 74,
+  hint: "Exclude powers of 2.",
+  difficulty: "Hard"
+},
+{
+  q: "Integers a,b,c satisfy ab/(a−b)=c. Max a+b+c ≤99.",
+  a: 96,
+  hint: "Rewrite as Diophantine.",
+  difficulty: "Hard"
+},
+{
+  q: "Pairs (a,b) with divisibility conditions where b is 3-digit. Count pairs.",
+  a: 18,
+  hint: "Use divisibility manipulation.",
   difficulty: "Hard"
 },
     ];
