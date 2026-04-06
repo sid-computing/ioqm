@@ -9,9 +9,7 @@
 <style>
 :root {
     --bg: #0b1220;
-    --bg-soft: #111827;
     --panel: rgba(17, 24, 39, 0.78);
-    --panel-strong: rgba(15, 23, 42, 0.92);
     --border: rgba(148, 163, 184, 0.14);
     --text: #e5eefc;
     --muted: #94a3b8;
@@ -145,7 +143,7 @@ button {
     font-size: 14px;
     cursor: pointer;
     box-shadow: 0 10px 25px rgba(96, 165, 250, 0.25);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 button:hover {
@@ -343,16 +341,15 @@ button:active {
                     </div>
 
                     <div class="stat-card">
-                        <div class="stat-label">Average Cutoff</div>
-                        <div class="stat-value" id="averageValue">11.8</div>
-                        <div class="stat-sub" id="averageSub">Average across all visible bars.</div>
+                        <div class="stat-label">Top 10% Score</div>
+                        <div class="stat-value" id="topDecileValue">10</div>
+                        <div class="stat-sub" id="topDecileSub">Top decile cutoff for this year.</div>
                     </div>
                 </div>
 
                 <div class="note">
-                    Use this section for short interpretation notes later:
-                    for example, “Delhi has consistently stayed above the national benchmark,”
-                    or “2024 saw a large increase compared to 2023.”
+                    This panel highlights the selected view, the highest visible cutoff,
+                    and the known top-decile score for the chosen year.
                 </div>
             </aside>
 
@@ -387,20 +384,32 @@ const yearSelect = document.getElementById("yearSelect");
 const stateSelect = document.getElementById("stateSelect");
 const resetBtn = document.getElementById("resetBtn");
 
+function getYears() {
+    return Object.keys(dataJSON);
+}
+
+function getStates() {
+    return Object.keys(dataJSON[getYears()[0]]).filter(key => key !== "Top 10%");
+}
+
 function populateDropdowns() {
-    const years = Object.keys(dataJSON);
-    const states = Object.keys(dataJSON[years[0]]);
+    const years = getYears();
+    const states = getStates();
 
     years.forEach(year => yearSelect.add(new Option(year, year)));
     states.forEach(state => stateSelect.add(new Option(state, state)));
 
     yearSelect.addEventListener("change", () => {
-        if (yearSelect.value) stateSelect.value = "";
+        if (yearSelect.value) {
+            stateSelect.value = "";
+        }
         updateGraph();
     });
 
     stateSelect.addEventListener("change", () => {
-        if (stateSelect.value) yearSelect.value = "";
+        if (stateSelect.value) {
+            yearSelect.value = "";
+        }
         updateGraph();
     });
 
@@ -422,36 +431,48 @@ function getBarColors(values) {
     });
 }
 
-function updateStats(xData, yData, modeLabel) {
+function updateStats(xData, yData, modeLabel, selectedYear) {
     const maxVal = Math.max(...yData);
-    const avgVal = (yData.reduce((a, b) => a + b, 0) / yData.length).toFixed(1);
     const maxLabel = xData[yData.indexOf(maxVal)];
 
     document.getElementById("currentViewValue").textContent = modeLabel;
     document.getElementById("currentViewSub").textContent =
-        modeLabel.includes("State")
+        modeLabel.startsWith("State: ")
             ? `Showing year-wise trend for ${modeLabel.replace("State: ", "")}.`
             : `Showing state-wise cutoffs for ${modeLabel.replace("Year: ", "")}.`;
 
     document.getElementById("highestValue").textContent = maxVal;
     document.getElementById("highestSub").textContent = `${maxLabel} has the highest cutoff in this view.`;
 
-    document.getElementById("averageValue").textContent = avgVal;
-    document.getElementById("averageSub").textContent = `Average across ${yData.length} visible data point${yData.length > 1 ? "s" : ""}.`;
+    let topDecileValue = "—";
+    let topDecileSub = "Select a year to see top decile cutoff.";
+
+    if (selectedYear) {
+        topDecileValue = dataJSON[selectedYear]["Top 10%"];
+        topDecileSub = `Top decile cutoff for ${selectedYear}.`;
+    } else if (!modeLabel.startsWith("State: ")) {
+        const defaultYear = getYears()[0];
+        topDecileValue = dataJSON[defaultYear]["Top 10%"];
+        topDecileSub = `Top decile cutoff for ${defaultYear}.`;
+    }
+
+    document.getElementById("topDecileValue").textContent = topDecileValue;
+    document.getElementById("topDecileSub").textContent = topDecileSub;
 }
 
 function updateGraph() {
     const selectedYear = yearSelect.value;
     const selectedState = stateSelect.value;
 
-    const years = Object.keys(dataJSON);
-    const states = Object.keys(dataJSON[years[0]]);
+    const years = getYears();
+    const states = getStates();
 
     let xData = [];
     let yData = [];
     let title = "";
     let description = "";
     let modeLabel = "";
+    let activeYearForTop10 = "";
 
     if (selectedYear) {
         xData = states;
@@ -459,18 +480,22 @@ function updateGraph() {
         title = `State-wise Cutoff Comparison — ${selectedYear}`;
         description = `This view compares cutoff values across states for ${selectedYear}.`;
         modeLabel = `Year: ${selectedYear}`;
+        activeYearForTop10 = selectedYear;
     } else if (selectedState) {
         xData = years;
         yData = years.map(year => dataJSON[year][selectedState]);
         title = `Trend Over Time — ${selectedState}`;
         description = `This view tracks how the cutoff for ${selectedState} has changed across years.`;
         modeLabel = `State: ${selectedState}`;
+        activeYearForTop10 = "";
     } else {
+        const defaultYear = years[0];
         xData = states;
-        yData = states.map(state => dataJSON[years[0]][state]);
-        title = `State-wise Cutoff Comparison — ${years[0]}`;
-        description = `Default view: comparing state-wise cutoffs for ${years[0]}.`;
-        modeLabel = `Year: ${years[0]}`;
+        yData = states.map(state => dataJSON[defaultYear][state]);
+        title = `State-wise Cutoff Comparison — ${defaultYear}`;
+        description = `Default view: comparing state-wise cutoffs for ${defaultYear}.`;
+        modeLabel = `Year: ${defaultYear}`;
+        activeYearForTop10 = defaultYear;
     }
 
     const colors = getBarColors(yData);
@@ -493,9 +518,6 @@ function updateGraph() {
     };
 
     const layout = {
-        title: {
-            text: "",
-        },
         margin: { l: 55, r: 20, t: 30, b: 60 },
         paper_bgcolor: "rgba(0,0,0,0)",
         plot_bgcolor: "rgba(0,0,0,0)",
@@ -504,7 +526,6 @@ function updateGraph() {
             size: 14
         },
         xaxis: {
-            title: "",
             tickfont: { size: 13, color: "#cbd5e1" },
             showgrid: false,
             zeroline: false
@@ -523,11 +544,14 @@ function updateGraph() {
         }
     };
 
-    Plotly.react("graph", [trace], layout, { responsive: true, displayModeBar: false });
+    Plotly.react("graph", [trace], layout, {
+        responsive: true,
+        displayModeBar: false
+    });
 
     document.getElementById("chartTitle").textContent = title;
     document.getElementById("chartDescription").textContent = description;
-    updateStats(xData, yData, modeLabel);
+    updateStats(xData, yData, modeLabel, activeYearForTop10);
 }
 
 populateDropdowns();
