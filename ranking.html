@@ -1,76 +1,505 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>State Rankings by Top 40 (Class 12)</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>State Difficulty Rankings</title>
 <style>
-body { font-family: Arial; background:#111; color:#fff; text-align:center; margin:50px; }
-select { margin:10px; padding:5px; font-size:16px; }
-table { margin:auto; border-collapse: collapse; width:60%; margin-top:20px; }
-th, td { padding:10px; border:1px solid #0ff; text-align:center; }
-th { background:#0ff; color:#000; }
-.top1 { background:#ff0; color:#000; }
-.top2 { background:#0f0; color:#000; }
-.top3 { background:#f00; color:#fff; }
+:root {
+    --bg: #0b1220;
+    --panel: rgba(17, 24, 39, 0.78);
+    --border: rgba(148, 163, 184, 0.14);
+    --text: #e5eefc;
+    --muted: #94a3b8;
+    --accent: #60a5fa;
+    --accent-2: #a78bfa;
+    --gold: #facc15;
+    --silver: #86efac;
+    --bronze: #f87171;
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 15% 20%, rgba(96, 165, 250, 0.14), transparent 28%),
+        radial-gradient(circle at 85% 18%, rgba(167, 139, 250, 0.12), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(52, 211, 153, 0.08), transparent 35%),
+        linear-gradient(135deg, #020617 0%, #0b1220 45%, #111827 100%);
+}
+
+body {
+    padding: 32px 18px 50px;
+}
+
+.page {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(96, 165, 250, 0.12);
+    border: 1px solid rgba(96, 165, 250, 0.18);
+    color: #bfdbfe;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    margin-bottom: 16px;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+.subtitle {
+    max-width: 760px;
+    margin: 14px auto 0;
+    color: var(--muted);
+    font-size: 1.02rem;
+    line-height: 1.65;
+}
+
+.dashboard {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(14px);
+    overflow: hidden;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0));
+}
+
+.control-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.control-card label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+select {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(15, 23, 42, 0.9);
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+}
+
+.actions {
+    display: flex;
+    align-items: end;
+}
+
+button {
+    width: 100%;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(96, 165, 250, 0.25);
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+}
+
+.sidebar {
+    padding: 24px;
+    border-right: 1px solid var(--border);
+    background: rgba(2, 6, 23, 0.22);
+}
+
+.sidebar h2 {
+    margin: 0 0 14px;
+    font-size: 1.05rem;
+    color: #dbeafe;
+}
+
+.stat-list {
+    display: grid;
+    gap: 14px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 0.87rem;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 1.7rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.stat-sub {
+    color: #cbd5e1;
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.note {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(96, 165, 250, 0.08);
+    border: 1px solid rgba(96, 165, 250, 0.15);
+    color: #dbeafe;
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.main {
+    padding: 24px;
+}
+
+.table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(15, 23, 42, 0.48);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    text-align: left;
+    padding: 16px 18px;
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
+    color: #cbd5e1;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+}
+
+tbody td {
+    padding: 15px 18px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    color: #e5eefc;
+}
+
+tbody tr:hover {
+    background: rgba(255,255,255,0.03);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    font-weight: 700;
+}
+
+.rank-1 .rank-badge {
+    background: rgba(250, 204, 21, 0.2);
+    color: var(--gold);
+}
+
+.rank-2 .rank-badge {
+    background: rgba(134, 239, 172, 0.18);
+    color: var(--silver);
+}
+
+.rank-3 .rank-badge {
+    background: rgba(248, 113, 113, 0.18);
+    color: var(--bronze);
+}
+
+.state-name {
+    font-weight: 600;
+}
+
+.cutoff-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(96, 165, 250, 0.12);
+    border: 1px solid rgba(96, 165, 250, 0.16);
+    color: #dbeafe;
+    font-weight: 700;
+}
+
+.status {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 980px) {
+    .controls,
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        padding: 20px 12px 36px;
+    }
+
+    .controls, .sidebar, .main {
+        padding: 18px;
+    }
+
+    thead th, tbody td {
+        padding: 12px 12px;
+    }
+}
 </style>
 </head>
 <body>
-<h1>🏆 State Rankings by Top 40 (Class 12)</h1>
+<div class="page">
+    <section class="hero">
+        <div class="badge">IOQM / Exam Analytics</div>
+        <h1>State Difficulty Rankings</h1>
+        <p class="subtitle">
+            Compare regions by cutoff for a selected year. Higher cutoff usually indicates a more competitive or difficult qualification environment in that region.
+        </p>
+    </section>
 
-<label>Select Year:</label>
-<select id="yearSelect">
-    <option value="">--Select Year--</option>
-</select>
+    <section class="dashboard">
+        <div class="controls">
+            <div class="control-card">
+                <label for="yearSelect">Choose Year</label>
+                <select id="yearSelect">
+                    <option value="">Select a year</option>
+                </select>
+            </div>
 
-<table id="rankingTable">
-    <thead>
-        <tr><th>Rank</th><th>State</th><th>Cutoff</th></tr>
-    </thead>
-    <tbody></tbody>
-</table>
+            <div class="actions">
+                <button id="resetBtn">Reset</button>
+            </div>
+        </div>
+
+        <div class="layout">
+            <aside class="sidebar">
+                <h2>Quick Insights</h2>
+
+                <div class="stat-list">
+                    <div class="stat-card">
+                        <div class="stat-label">Selected Year</div>
+                        <div class="stat-value" id="selectedYearValue">—</div>
+                        <div class="stat-sub" id="selectedYearSub">Choose a year to view rankings.</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label">Hardest Region</div>
+                        <div class="stat-value" id="hardestValue">—</div>
+                        <div class="stat-sub" id="hardestSub">Highest cutoff will appear here.</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label">Top 10% Score</div>
+                        <div class="stat-value" id="topDecileValue">—</div>
+                        <div class="stat-sub" id="topDecileSub">Top decile benchmark for the selected year.</div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    These rankings are based on cutoff values from your <b>cutoffs.json</b> file. The entry <b>Top 10%</b> is used as a benchmark card, not as a ranked state/region.
+                </div>
+            </aside>
+
+            <div class="main">
+                <div class="table-wrap">
+                    <table id="rankingTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Rank</th>
+                                <th>State / Region</th>
+                                <th style="width: 140px;">Cutoff</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">Select a year to see rankings.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="status" id="statusMessage">Loading cutoffs.json...</div>
+            </div>
+        </div>
+    </section>
+</div>
 
 <script>
 let dataJSON = {};
 
-// Load JSON dynamically
+const yearSelect = document.getElementById("yearSelect");
+const resetBtn = document.getElementById("resetBtn");
+const tbody = document.querySelector("#rankingTable tbody");
+const statusMessage = document.getElementById("statusMessage");
+
 async function loadData() {
-    const res = await fetch('top40-class-12.json?ts=' + new Date().getTime());
-    dataJSON = await res.json();
-    populateDropdown();
+    const response = await fetch("cutoffs.json");
+    if (!response.ok) {
+        throw new Error("Could not load cutoffs.json");
+    }
+    dataJSON = await response.json();
+}
+
+function getYears() {
+    return Object.keys(dataJSON).sort();
 }
 
 function populateDropdown() {
-    const yearSelect = document.getElementById('yearSelect');
-    Object.keys(dataJSON).forEach(y => yearSelect.add(new Option(y,y)));
-    yearSelect.onchange = updateRanking;
-}
-
-function updateRanking() {
-    const year = document.getElementById('yearSelect').value;
-    if(!year) return;
-
-    const states = Object.entries(dataJSON[year]);
-    // Sort descending by cutoff
-    states.sort((a,b)=>b[1]-a[1]);
-
-    // Top 10% calculation (ceil)
-    const topCount = Math.ceil(states.length * 0.1);
-    const tbody = document.querySelector("#rankingTable tbody");
-    tbody.innerHTML = "";
-
-    states.forEach(([state,cutoff],index)=>{
-        const tr = document.createElement('tr');
-        if(index===0) tr.classList.add('top1');
-        else if(index===1) tr.classList.add('top2');
-        else if(index===2) tr.classList.add('top3');
-
-        tr.innerHTML = `<td>${index+1}</td><td>${state}</td><td>${cutoff}</td>`;
-        tbody.appendChild(tr);
+    yearSelect.innerHTML = `<option value="">Select a year</option>`;
+    getYears().forEach(year => {
+        yearSelect.add(new Option(year, year));
     });
 }
 
-loadData();
-</script>
+function updateStats(year, sortedStates) {
+    const yearValue = document.getElementById("selectedYearValue");
+    const yearSub = document.getElementById("selectedYearSub");
+    const hardestValue = document.getElementById("hardestValue");
+    const hardestSub = document.getElementById("hardestSub");
+    const topDecileValue = document.getElementById("topDecileValue");
+    const topDecileSub = document.getElementById("topDecileSub");
 
+    if (!year || !sortedStates.length) {
+        yearValue.textContent = "—";
+        yearSub.textContent = "Choose a year to view rankings.";
+        hardestValue.textContent = "—";
+        hardestSub.textContent = "Highest cutoff will appear here.";
+        topDecileValue.textContent = "—";
+        topDecileSub.textContent = "Top decile benchmark for the selected year.";
+        return;
+    }
+
+    const [hardestState, hardestCutoff] = sortedStates[0];
+    const top10 = dataJSON[year]["Top 10%"];
+
+    yearValue.textContent = year;
+    yearSub.textContent = `Showing ranking table for ${year}.`;
+
+    hardestValue.textContent = hardestCutoff;
+    hardestSub.textContent = `${hardestState} has the highest cutoff in ${year}.`;
+
+    topDecileValue.textContent = top10 ?? "—";
+    topDecileSub.textContent = `Top decile benchmark for ${year}.`;
+}
+
+function updateRanking() {
+    const year = yearSelect.value;
+
+    if (!year || !dataJSON[year]) {
+        tbody.innerHTML = `<tr><td colspan="3">Select a year to see rankings.</td></tr>`;
+        updateStats("", []);
+        return;
+    }
+
+    const sortedStates = Object.entries(dataJSON[year])
+        .filter(([name]) => name !== "Top 10%")
+        .sort((a, b) => b[1] - a[1]);
+
+    tbody.innerHTML = "";
+
+    sortedStates.forEach(([state, cutoff], index) => {
+        const tr = document.createElement("tr");
+        if (index === 0) tr.classList.add("rank-1");
+        if (index === 1) tr.classList.add("rank-2");
+        if (index === 2) tr.classList.add("rank-3");
+
+        tr.innerHTML = `
+            <td><span class="rank-badge">#${index + 1}</span></td>
+            <td><span class="state-name">${state}</span></td>
+            <td><span class="cutoff-pill">${cutoff}</span></td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+
+    updateStats(year, sortedStates);
+    statusMessage.textContent = `Showing ${sortedStates.length} ranked entries for ${year}.`;
+}
+
+yearSelect.addEventListener("change", updateRanking);
+
+resetBtn.addEventListener("click", () => {
+    yearSelect.value = "";
+    updateRanking();
+});
+
+async function init() {
+    try {
+        await loadData();
+        populateDropdown();
+        statusMessage.textContent = "Data loaded from cutoffs.json";
+    } catch (error) {
+        statusMessage.textContent = error.message;
+        tbody.innerHTML = `<tr><td colspan="3">Could not load cutoffs.json</td></tr>`;
+    }
+}
+
+init();
+</script>
 </body>
 </html>
